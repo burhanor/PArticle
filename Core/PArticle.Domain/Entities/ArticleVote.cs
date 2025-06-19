@@ -1,0 +1,19 @@
+﻿using PArticle.Domain.Concretes;
+using PArticle.Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PArticle.Domain.Entities
+{
+	public class ArticleVote:EntityBase
+	{
+		public int ArticleId { get; set; }
+		public DateTime VoteDate { get; set; }
+		public string IpAddress { get; set; }
+		public Vote Vote { get; set; }
+		public virtual Article Article { get; set; }
+	}
+}

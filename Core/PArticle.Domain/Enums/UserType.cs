@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PArticle.Domain.Enums
+{
+	public enum UserType
+	{
+		Admin = 1,
+		Editor = 2,
+		Author = 3,
+		Subscriber = 4,
+		Guest = 5
+	}
+}
