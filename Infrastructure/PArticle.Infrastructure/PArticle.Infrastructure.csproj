@@ -13,7 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\PArticle.Application.Abstractions\PArticle.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\Core\PArticle.Domain\PArticle.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Redis\" />
   </ItemGroup>
 
 </Project>

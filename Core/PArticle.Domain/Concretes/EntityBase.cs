@@ -1,4 +1,4 @@
-﻿using PArticle.Domain.Interfaces;
+﻿using Domain.Contracts.Interfaces;
 
 namespace PArticle.Domain.Concretes
 {

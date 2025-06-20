@@ -1,4 +1,4 @@
-﻿namespace PArticle.Domain.Interfaces
+﻿namespace Domain.Contracts.Interfaces
 {
 	public interface IEntityBase
 	{

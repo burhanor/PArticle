@@ -25,6 +25,11 @@ namespace PArticle.Persistence.Configurations.TableConfigurations
 			builder.Property(u => u.UserType)
 				.IsRequired();
 
+			builder.HasIndex(u => u.Nickname)
+				.IsUnique();
+			builder.HasIndex(u => u.EmailAddress)
+				.IsUnique();
+
 
 		}
 	}

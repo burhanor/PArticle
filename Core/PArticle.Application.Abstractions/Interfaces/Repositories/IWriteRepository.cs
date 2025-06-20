@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using Domain.Contracts.Interfaces;
+using System.Linq.Expressions;
 
 namespace PArticle.Application.Abstractions.Interfaces.Repositories
 {
-	public interface IWriteRepository<T> where T : class, IId, new()
+	public interface IWriteRepository<T> where T : class, IEntityBase, new()
 	{
 		public Task AddAsync(T entity, CancellationToken cancellationToken);
 		public Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken);

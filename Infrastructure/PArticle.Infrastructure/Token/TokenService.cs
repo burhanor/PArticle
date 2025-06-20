@@ -1,20 +1,16 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using PArticle.Domain.Entities;
-using System;
-using System.Collections.Generic;
+using PArticle.Application.Abstractions.Interfaces.Token;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PArticle.Infrastructure.Token
 {
 	public class TokenService(IOptions<TokenModel> options) : ITokenService
 	{
 		private readonly TokenModel options = options.Value;
-		public JwtSecurityToken GenerateAccessToken(User user, IList<string>? roles)
+		public string GenerateAccessToken(UserDto user, IList<string>? roles)
 		{
 			List<Claim> claims = [
 				new (JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
@@ -22,7 +18,7 @@ namespace PArticle.Infrastructure.Token
 				new (JwtRegisteredClaimNames.Name,user.Nickname ?? string.Empty),
 				new (JwtRegisteredClaimNames.Email,user.EmailAddress ?? string.Empty),
 				new ("image",user.AvatarPath??string.Empty),
-				new("userType",user.UserType.ToString()),
+				new("userType",user.UserType),
 				];
 			if (roles?.Count > 0)
 				claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
@@ -35,7 +31,8 @@ namespace PArticle.Infrastructure.Token
 				signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
 				);
 
-			return token;
+			return new JwtSecurityTokenHandler().WriteToken(token);
+
 		}
 
 		public string GenerateRefreshToken()

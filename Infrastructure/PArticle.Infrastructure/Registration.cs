@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using PArticle.Application.Abstractions.Interfaces.Token;
 using PArticle.Infrastructure.Token;
 using System.Text;
 

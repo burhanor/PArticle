@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using PArticle.Application.Abstractions.Interfaces;
+﻿using Domain.Contracts.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using PArticle.Application.Abstractions.Interfaces.Repositories;
 using System.Linq.Expressions;
 
 namespace PArticle.Persistence.Repositories.Concretes
 {
-	public class WriteRepository<T>(DbContext dbContext) : IWriteRepository<T> where T : class, IId, new()
+	public class WriteRepository<T>(DbContext dbContext) : IWriteRepository<T> where T : class, IEntityBase, new()
 	{
 		private DbSet<T> Table { get => dbContext.Set<T>(); }
 		public async Task AddAsync(T entity, CancellationToken cancellationToken) => await Table.AddAsync(entity, cancellationToken);

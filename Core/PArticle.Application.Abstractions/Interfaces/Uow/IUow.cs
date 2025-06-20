@@ -1,11 +1,12 @@
-﻿using PArticle.Application.Abstractions.Interfaces.Repositories;
+﻿using Domain.Contracts.Interfaces;
+using PArticle.Application.Abstractions.Interfaces.Repositories;
 
 namespace PArticle.Application.Abstractions.Interfaces.Uow
 {
 	public interface IUow
 	{
-		IReadRepository<T> GetReadRepository<T>() where T : class, IId, new();
-		IWriteRepository<T> GetWriteRepository<T>() where T : class, IId, new();
+		IReadRepository<T> GetReadRepository<T>() where T : class, IEntityBase, new();
+		IWriteRepository<T> GetWriteRepository<T>() where T : class, IEntityBase, new();
 		Task BeginTransactionAsync(CancellationToken cancellationToken = default);
 		Task CommitTransactionAsync(CancellationToken cancellationToken = default);
 		Task RollbackTransactionAsync(CancellationToken cancellationToken = default);

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Contracts.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using PArticle.Application.Abstractions.Interfaces;
 using PArticle.Application.Abstractions.Interfaces.Repositories;
@@ -6,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace PArticle.Persistence.Repositories.Concretes
 {
-	public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T : class, IId, new()
+	public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T : class, IEntityBase, new()
 	{
 		private readonly DbContext dbContext = dbContext;
 		private DbSet<T> Table { get => dbContext.Set<T>(); }

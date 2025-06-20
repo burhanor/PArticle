@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using Domain.Contracts.Interfaces;
+using System.Linq.Expressions;
 
 namespace PArticle.Application.Abstractions.Interfaces.Repositories
 {
-	public interface IReadRepository<T> where T : class, IId, new()
+	public interface IReadRepository<T> where T : class, IEntityBase, new()
 	{
 		IQueryable<T> Query();
 
