@@ -23,11 +23,12 @@ namespace PArticle.Persistence.Configurations.TableConfigurations
 				.HasMaxLength(200);
 			builder.Property(a => a.Content)
 				.IsRequired();
-
+			builder.Property(c => c.Status)
+				.IsRequired();
 			builder.HasOne(a => a.User)
 				.WithMany(u => u.Articles)
 				.HasForeignKey(a => a.UserId)
-				.OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.Cascade);
 
 		}
 	}

@@ -19,12 +19,12 @@ namespace PArticle.Persistence.Configurations.TableConfigurations
 			builder.HasOne(ac => ac.Article)
 				.WithMany(a => a.ArticleTags)
 				.HasForeignKey(ac => ac.ArticleId)
-				.OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.Cascade);
 
 			builder.HasOne(ac => ac.Tag)
 				.WithMany(c => c.ArticleTags)
 				.HasForeignKey(ac => ac.TagId)
-				.OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.Cascade);
 		}
 	}
 }

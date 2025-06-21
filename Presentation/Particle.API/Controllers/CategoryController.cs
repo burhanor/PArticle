@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Particle.API.Extensions;
 using PArticle.Application.Features.Category.Commands.CreateCategory;
@@ -31,12 +32,14 @@ namespace Particle.API.Controllers
 			return await this.GetByIdAsync(mediator, request);
 		}
 		[HttpPost]
+		[Authorize]
 		public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateModel model)
 		{
 			CreateCategoryCommandRequest request = mapper.Map<CreateCategoryCommandRequest>(model);
 			return await this.CreateAsync(mediator,request);
 		}
 		[HttpPut("{id}")]
+		[Authorize]
 		public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryUpdateModel model)
 		{
 			UpdateCategoryCommandRequest request = mapper.Map<UpdateCategoryCommandRequest>(model);
@@ -45,12 +48,14 @@ namespace Particle.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
+		[Authorize]
 		public async Task<IActionResult> DeleteCategory(int id)
 		{
 			DeleteCategoryCommandRequest request = new (id);
 			return await this.DeleteAsync(mediator, request);
 		}
 		[HttpDelete]
+		[Authorize]
 		public async Task<IActionResult> DeleteCategories([FromBody]  List<int> ids)
 		{
 			DeleteCategoryCommandRequest request = new(ids);

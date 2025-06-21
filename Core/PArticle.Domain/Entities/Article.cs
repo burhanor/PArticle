@@ -1,4 +1,5 @@
 ﻿using PArticle.Domain.Concretes;
+using PArticle.Domain.Enums;
 
 namespace PArticle.Domain.Entities
 {
@@ -9,6 +10,7 @@ namespace PArticle.Domain.Entities
 		public DateTime PublishDate { get; set; }
 		public string Slug { get; set; }
 		public int UserId { get; set; }
+		public Status Status { get; set; }
 
 		public virtual User User { get; set; }
 		public virtual ICollection<ArticleVote> ArticleVotes { get; set; }

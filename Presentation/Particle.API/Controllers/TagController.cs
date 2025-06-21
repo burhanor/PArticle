@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Particle.API.Extensions;
 using PArticle.Application.Features.Tag.Commands.CreateTag;
@@ -33,12 +34,14 @@ namespace Particle.API.Controllers
 			return await this.GetByIdAsync(mediator, request);
 		}
 		[HttpPost]
+		[Authorize]
 		public async Task<IActionResult> CreateTag([FromBody] TagCreateModel model)
 		{
 			CreateTagCommandRequest request = mapper.Map<CreateTagCommandRequest>(model);
 			return await this.CreateAsync(mediator, request);
 		}
 		[HttpPut("{id}")]
+		[Authorize]
 		public async Task<IActionResult> UpdateTag(int id, [FromBody] TagUpdateModel model)
 		{
 			UpdateTagCommandRequest request = mapper.Map<UpdateTagCommandRequest>(model);
@@ -47,12 +50,14 @@ namespace Particle.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
+		[Authorize]
 		public async Task<IActionResult> DeleteTag(int id)
 		{
 			DeleteTagCommandRequest request = new(id);
 			return await this.DeleteAsync(mediator, request);
 		}
 		[HttpDelete]
+		[Authorize]
 		public async Task<IActionResult> DeleteTags([FromBody] List<int> ids)
 		{
 			DeleteTagCommandRequest request = new(ids);

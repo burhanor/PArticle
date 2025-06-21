@@ -31,13 +31,13 @@ namespace PArticle.Application.Features.Auth.Commands.Login
 				response.Message = Messages.User.USER_NOT_FOUND;
 				return response;
 			}
-			response.Data = mapper.Map<LoginCommandResponse>(user);
 			response.Message = Messages.Auth.LOGIN_SUCCESS;
 			response.Status = ResponseStatus.Success;
 
 			UserDto userDto = mapper.Map<UserDto>(user);
 			string accessToken = tokenService.GenerateAccessToken(userDto, [user.UserType.ToString()]);
 			string refreshToken = tokenService.GenerateRefreshToken();
+			response.Data = new LoginCommandResponse(accessToken, refreshToken);
 
 			IWriteRepository<Domain.Entities.UserLogin> tokenWriteRepository = uow.GetWriteRepository<Domain.Entities.UserLogin>();
 			await tokenWriteRepository.AddAsync(new Domain.Entities.UserLogin
@@ -56,6 +56,7 @@ namespace PArticle.Application.Features.Auth.Commands.Login
 				httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddMonths(3) });
 				httpContextAccessor.HttpContext.Response.Cookies.Append("accessToken", accessToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddDays(3) });
 			}
+
 			return response;
 		}
 	}
