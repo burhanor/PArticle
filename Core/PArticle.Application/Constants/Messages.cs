@@ -48,7 +48,25 @@ namespace PArticle.Application.Constants
 			public const string CATEGORY_NAME_ALREADY_EXIST = nameof(CATEGORY_NAME_ALREADY_EXIST);
 
 		}
-
+		public static class Tag
+		{
+			public const string TAG_NOT_FOUND = nameof(TAG_NOT_FOUND);
+			public const string TAG_CREATE_SUCCESS = nameof(TAG_CREATE_SUCCESS);
+			public const string TAG_CREATE_FAILED = nameof(TAG_CREATE_FAILED);
+			public const string TAG_UPDATE_SUCCESS = nameof(TAG_UPDATE_SUCCESS);
+			public const string TAG_UPDATE_FAILED = nameof(TAG_UPDATE_FAILED);
+			public const string TAG_DELETE_SUCCESS = nameof(TAG_DELETE_SUCCESS);
+			public const string TAG_DELETE_FAILED = nameof(TAG_DELETE_FAILED);
+			public const string TAG_NAME_MAX_LENGTH = nameof(TAG_NAME_MAX_LENGTH);
+			public const string TAG_NAME_REQUIRED = nameof(TAG_NAME_REQUIRED);
+			public const string TAG_SLUG_MAX_LENGTH = nameof(TAG_SLUG_MAX_LENGTH);
+			public const string TAG_SLUG_REQUIRED = nameof(TAG_SLUG_REQUIRED);
+			public const string TAG_SLUG_ALREADY_EXIST = nameof(TAG_SLUG_ALREADY_EXIST);
+			public const string TAG_SLUG_INVALID = nameof(TAG_SLUG_INVALID);
+			public const string TAG_STATUS_INVALID = nameof(TAG_STATUS_INVALID);
+			public const string TAG_NAME_ALREADY_EXIST = nameof(TAG_NAME_ALREADY_EXIST);
+		}
+		
 		public static class User
 		{
 			public const string USER_NOT_FOUND = nameof(USER_NOT_FOUND);

@@ -1,15 +1,8 @@
-﻿using MediatR;
-using PArticle.Application.Concretes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PArticle.Application.Concretes;
 
 namespace PArticle.Application.Features.Category.Queries.GetCategory
 {
-	public class GetCategoryQueryRequest:GetByIdRequest<GetCategoryQueryResponse>
+	public class GetCategoryQueryRequest(int id) : GetByIdRequest<GetCategoryQueryResponse>(id)
 	{
-		public GetCategoryQueryRequest(int id) : base(id) { }
 	}
 }
