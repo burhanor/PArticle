@@ -1,7 +1,6 @@
-﻿using Domain.Contracts.Interfaces;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
+using PArticle.Application.Abstractions.Interfaces;
 
 namespace Particle.API.Extensions
 {
@@ -17,9 +16,18 @@ namespace Particle.API.Extensions
 			return controller.Ok(response);
 		}
 
-		public static async Task<IActionResult> CreateAsync<TRequest>(this ControllerBase controller, IMediator mediator, TRequest request) => await CreateOrUpdateAsync(controller, mediator, request);
+		public static async Task<IActionResult> CreateAsync<TRequest>(this ControllerBase controller, IMediator mediator, TRequest request)
+		{
+			if (request == null)
+				return controller.NotFound();
+			var response = await mediator.Send(request);
+			if (response == null)
+				return controller.NotFound();
+			string uri = controller.HttpContext.Request.Path;
+			return controller.Created(uri, response);
+		}
 
-		public static async Task<IActionResult> UpdateAsync<TRequest>(this ControllerBase controller, IMediator mediator, TRequest request) where TRequest : class, IEntityBase, new()
+		public static async Task<IActionResult> UpdateAsync<TRequest>(this ControllerBase controller, IMediator mediator, TRequest request) where TRequest : class, IId, new()
 		{
 			return await CreateOrUpdateAsync(controller, mediator, request);
 		}

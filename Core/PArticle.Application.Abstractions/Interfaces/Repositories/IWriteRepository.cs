@@ -7,7 +7,7 @@ namespace PArticle.Application.Abstractions.Interfaces.Repositories
 	{
 		public Task AddAsync(T entity, CancellationToken cancellationToken);
 		public Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken);
-		public void Update(T entity);
+		public bool Update(T entity);
 		public void UpdateRange(IEnumerable<T> entities);
 		public void Delete(T entity);
 		public void DeleteRange(IEnumerable<T> entities);

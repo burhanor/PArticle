@@ -14,6 +14,8 @@ namespace PArticle.Application.Models
 		internal void AddValidationError(string propertyName, string errorMessage)
 		{
 			ValidationErrors.Add(new ValidationError(propertyName, errorMessage));
+			if (Status!=ResponseStatus.ValidationError)
+				Status = ResponseStatus.ValidationError;
 		}
 	}
 }

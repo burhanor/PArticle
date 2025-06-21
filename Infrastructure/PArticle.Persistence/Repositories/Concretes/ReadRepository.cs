@@ -69,5 +69,10 @@ namespace PArticle.Persistence.Repositories.Concretes
 		{
 			return await query.ToListAsync(cancellationToken);
 		}
+
+		public async Task<int> CountAsync(IQueryable<T> query, CancellationToken cancellationToken = default)
+		{
+			return await query.CountAsync();
+		}
 	}
 }

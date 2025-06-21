@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using FluentValidation;
+using FluentValidation.Results;
 using PArticle.Application.Enums;
 using PArticle.Application.Models;
 using System;
@@ -34,5 +35,8 @@ namespace PArticle.Application.Extentions
 			}
 			return response;
 		}
+
+
+		
 	}
 }
