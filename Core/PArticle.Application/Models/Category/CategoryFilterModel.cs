@@ -1,4 +1,4 @@
-﻿using PArticle.Domain.Enums;
+﻿using Domain.Contracts.Enums;
 
 namespace PArticle.Application.Models.Category
 {

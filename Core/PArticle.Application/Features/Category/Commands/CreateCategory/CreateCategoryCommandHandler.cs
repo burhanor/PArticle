@@ -1,20 +1,12 @@
 ﻿using AutoMapper;
-using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Constants;
 using PArticle.Application.Enums;
-using PArticle.Application.Extentions;
-using PArticle.Application.Features.Auth.Commands.Login;
 using PArticle.Application.Helpers;
 using PArticle.Application.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PArticle.Application.Features.Category.Commands.CreateCategory
 {

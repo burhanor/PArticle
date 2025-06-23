@@ -1,5 +1,5 @@
-﻿using PArticle.Domain.Entities;
-using PArticle.Domain.Enums;
+﻿using Domain.Contracts.Enums;
+using PArticle.Domain.Entities;
 
 namespace PArticle.Persistence.Seeds
 {

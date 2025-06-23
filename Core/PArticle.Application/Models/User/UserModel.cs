@@ -1,5 +1,5 @@
-﻿using Domain.Contracts.Interfaces;
-using PArticle.Domain.Enums;
+﻿using Domain.Contracts.Enums;
+using Domain.Contracts.Interfaces;
 
 namespace PArticle.Application.Models.User
 {

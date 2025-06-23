@@ -34,8 +34,8 @@ namespace PArticle.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("PublishDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("PublishDate")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Slug")
                         .IsRequired()

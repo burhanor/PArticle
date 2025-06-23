@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PArticle.Domain.Entities;
+using PArticle.Domain.Views;
+using PArticle.Persistence.Migrations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +25,13 @@ namespace PArticle.Persistence.Context
 		public DbSet<User> Users { get; set; }
 
 		public DbSet<UserLogin> UserLogins { get; set; }
+
+		#endregion
+
+		#region Views
+
+		public DbSet<VwArticleCategory> VwArticleCategories { get; set; }
+		public DbSet<VwArticleTag> VwArticleTags { get; set; }
 
 		#endregion
 

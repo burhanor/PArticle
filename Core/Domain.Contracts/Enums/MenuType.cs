@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PArticle.Domain.Enums
+namespace Domain.Contracts.Enums
 {
-	public enum Status
+	public enum MenuType
 	{
-		Pending = 1,
-		Published = 2,
-		Rejected = 3
+		Header = 1,
+		Footer = 2,
+		Sidebar = 3,
+		Custom = 4
 	}
 }

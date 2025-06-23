@@ -1,6 +1,6 @@
 ﻿namespace PArticle.Application.Models.Tag
 {
-	public class TagUpdateModel:TagCreateModel
+	public class TagUpdateModel:TagDto
 	{
 	}
 }

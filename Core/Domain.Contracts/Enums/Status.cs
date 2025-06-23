@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PArticle.Domain.Enums
+namespace Domain.Contracts.Enums
 {
-	public enum Vote
+	public enum Status
 	{
-		Like = 1,
-		Dislike = 2,
-		Neutral = 3
+		Pending = 1,
+		Published = 2,
+		Rejected = 3
 	}
 }

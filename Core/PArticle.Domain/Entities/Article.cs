@@ -1,5 +1,5 @@
-﻿using PArticle.Domain.Concretes;
-using PArticle.Domain.Enums;
+﻿using Domain.Contracts.Enums;
+using PArticle.Domain.Concretes;
 
 namespace PArticle.Domain.Entities
 {
@@ -7,7 +7,7 @@ namespace PArticle.Domain.Entities
 	{
 		public string Title { get; set; }
 		public string Content { get; set; }
-		public DateTime PublishDate { get; set; }
+		public DateTime? PublishDate { get; set; }
 		public string Slug { get; set; }
 		public int UserId { get; set; }
 		public Status Status { get; set; }

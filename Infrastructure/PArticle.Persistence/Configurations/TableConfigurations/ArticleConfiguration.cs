@@ -25,6 +25,11 @@ namespace PArticle.Persistence.Configurations.TableConfigurations
 				.IsRequired();
 			builder.Property(c => c.Status)
 				.IsRequired();
+
+			builder.Property(a => a.PublishDate)
+				.HasColumnType("datetime").
+				IsRequired(false);
+
 			builder.HasOne(a => a.User)
 				.WithMany(u => u.Articles)
 				.HasForeignKey(a => a.UserId)

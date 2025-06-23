@@ -1,11 +1,6 @@
-﻿using PArticle.Domain.Enums;
-
-namespace PArticle.Application.Models.Category
+﻿namespace PArticle.Application.Models.Category
 {
-	public class CategoryCreateModel
+	public class CategoryCreateModel: CategoryDto
 	{
-		public string Name { get; set; }
-		public string Slug { get; set; }
-		public Status Status { get; set; }
 	}
 }

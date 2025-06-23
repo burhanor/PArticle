@@ -1,4 +1,4 @@
-﻿namespace PArticle.Domain.Enums
+﻿namespace Domain.Contracts.Enums
 {
 	public enum UserType
 	{

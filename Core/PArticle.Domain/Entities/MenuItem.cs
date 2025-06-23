@@ -1,5 +1,5 @@
-﻿using PArticle.Domain.Concretes;
-using PArticle.Domain.Enums;
+﻿using Domain.Contracts.Enums;
+using PArticle.Domain.Concretes;
 
 namespace PArticle.Domain.Entities
 {

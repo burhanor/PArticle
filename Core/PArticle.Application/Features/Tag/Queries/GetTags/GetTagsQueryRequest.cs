@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using Domain.Contracts.Enums;
+using MediatR;
 using PArticle.Application.Models;
-using PArticle.Domain.Enums;
 
 namespace PArticle.Application.Features.Tag.Queries.GetTags
 {

@@ -11,6 +11,7 @@ namespace PArticle.Persistence.UnitOfWork
 		public async ValueTask DisposeAsync() => await dbContext.DisposeAsync();
 		IReadRepository<T> IUow.GetReadRepository<T>() => new ReadRepository<T>(dbContext);
 		IWriteRepository<T> IUow.GetWriteRepository<T>() => new WriteRepository<T>(dbContext);
+		IViewRepository<T> IUow.GetViewRepository<T>() => new ViewRepository<T>(dbContext);
 		public async Task<int> SaveChangesAsync(CancellationToken cancellationToken) => await dbContext.SaveChangesAsync(cancellationToken);
 		public int SaveChanges() => dbContext.SaveChanges();
 
@@ -22,6 +23,8 @@ namespace PArticle.Persistence.UnitOfWork
 			await dbContext.Database.CommitTransactionAsync(cancellationToken);
 		}
 		public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default) => await dbContext.Database.RollbackTransactionAsync(cancellationToken);
+
+	
 		#endregion
 
 

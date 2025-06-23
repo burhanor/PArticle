@@ -8,6 +8,25 @@ namespace PArticle.Application.Constants
 {
 	public static class Messages
 	{
+
+		public static class Article
+		{
+			public const string ARTICLE_NOT_FOUND = nameof(ARTICLE_NOT_FOUND);
+			public const string ARTICLE_CREATE_SUCCESS = nameof(ARTICLE_CREATE_SUCCESS);
+			public const string ARTICLE_CREATE_FAILED = nameof(ARTICLE_CREATE_FAILED);
+			public const string ARTICLE_UPDATE_SUCCESS = nameof(ARTICLE_UPDATE_SUCCESS);
+			public const string ARTICLE_UPDATE_FAILED = nameof(ARTICLE_UPDATE_FAILED);
+			public const string ARTICLE_DELETE_SUCCESS = nameof(ARTICLE_DELETE_SUCCESS);
+			public const string ARTICLE_DELETE_FAILED = nameof(ARTICLE_DELETE_FAILED);
+			public const string ARTICLE_TITLE_MAX_LENGTH = nameof(ARTICLE_TITLE_MAX_LENGTH);
+			public const string ARTICLE_TITLE_REQUIRED = nameof(ARTICLE_TITLE_REQUIRED);
+			public const string ARTICLE_SLUG_MAX_LENGTH = nameof(ARTICLE_SLUG_MAX_LENGTH);
+			public const string ARTICLE_SLUG_REQUIRED = nameof(ARTICLE_SLUG_REQUIRED);
+			public const string ARTICLE_SLUG_ALREADY_EXIST = nameof(ARTICLE_SLUG_ALREADY_EXIST);
+			public const string ARTICLE_CONTENT_REQUIRED = nameof(ARTICLE_CONTENT_REQUIRED);
+
+			public const string ARTICLE_STATUS_INVALID = nameof(ARTICLE_STATUS_INVALID);
+		}
 		public static class Auth
 		{
 
