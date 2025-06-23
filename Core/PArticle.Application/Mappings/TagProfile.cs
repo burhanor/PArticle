@@ -11,12 +11,12 @@ namespace PArticle.Application.Mappings
 	{
 		public TagProfile()
 		{
-			CreateMap<TagCreateModel, CreateTagCommandRequest>();
+			CreateMap<TagDto, CreateTagCommandRequest>();
 			CreateMap<CreateTagCommandRequest, Domain.Entities.Tag>();
 			CreateMap<Domain.Entities.Tag, CreateTagCommandResponse>();
 
 			CreateMap<UpdateTagCommandRequest, Domain.Entities.Tag>();
-			CreateMap<TagUpdateModel, UpdateTagCommandRequest>();
+			CreateMap<TagDto, UpdateTagCommandRequest>();
 			CreateMap<Domain.Entities.Tag, UpdateTagCommandResponse>();
 
 

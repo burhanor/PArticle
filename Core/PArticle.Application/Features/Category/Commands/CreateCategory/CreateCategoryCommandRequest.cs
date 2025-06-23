@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PArticle.Application.Features.Category.Commands.CreateCategory
 {
-	public class CreateCategoryCommandRequest:CategoryCreateModel,IRequest<ResponseContainer<CreateCategoryCommandResponse>>
+	public class CreateCategoryCommandRequest: CategoryDto, IRequest<ResponseContainer<CreateCategoryCommandResponse>>
 	{
 	}
 }

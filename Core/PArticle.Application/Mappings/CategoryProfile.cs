@@ -16,12 +16,12 @@ namespace PArticle.Application.Mappings
 	{
 		public CategoryProfile()
 		{
-			CreateMap<CategoryCreateModel, CreateCategoryCommandRequest>();
+			CreateMap<CategoryDto, CreateCategoryCommandRequest>();
 			CreateMap<CreateCategoryCommandRequest, Domain.Entities.Category>();
 			CreateMap<Domain.Entities.Category, CreateCategoryCommandResponse>();
 
 			CreateMap<UpdateCategoryCommandRequest, Domain.Entities.Category>();
-			CreateMap<CategoryUpdateModel, UpdateCategoryCommandRequest>();
+			CreateMap<CategoryDto, UpdateCategoryCommandRequest>();
 			CreateMap<Domain.Entities.Category, UpdateCategoryCommandResponse>();
 
 

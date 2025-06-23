@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PArticle.Application.Features.Category.Commands.UpdateCategory
 {
-	public class UpdateCategoryCommandRequest:CategoryUpdateModel, IRequest<ResponseContainer<UpdateCategoryCommandResponse>>,IId
+	public class UpdateCategoryCommandRequest:CategoryDto, IRequest<ResponseContainer<UpdateCategoryCommandResponse>>,IId
 	{
 		public int Id { get; set; }
 	}

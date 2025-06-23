@@ -35,14 +35,14 @@ namespace Particle.API.Controllers
 		}
 		[HttpPost]
 		[Authorize]
-		public async Task<IActionResult> CreateTag([FromBody] TagCreateModel model)
+		public async Task<IActionResult> CreateTag([FromBody] TagDto model)
 		{
 			CreateTagCommandRequest request = mapper.Map<CreateTagCommandRequest>(model);
 			return await this.CreateAsync(mediator, request);
 		}
 		[HttpPut("{id}")]
 		[Authorize]
-		public async Task<IActionResult> UpdateTag(int id, [FromBody] TagUpdateModel model)
+		public async Task<IActionResult> UpdateTag(int id, [FromBody] TagDto model)
 		{
 			UpdateTagCommandRequest request = mapper.Map<UpdateTagCommandRequest>(model);
 			request.Id = id;

@@ -33,14 +33,14 @@ namespace Particle.API.Controllers
 		}
 		[HttpPost]
 		[Authorize]
-		public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateModel model)
+		public async Task<IActionResult> CreateCategory([FromBody] CategoryDto model)
 		{
 			CreateCategoryCommandRequest request = mapper.Map<CreateCategoryCommandRequest>(model);
 			return await this.CreateAsync(mediator,request);
 		}
 		[HttpPut("{id}")]
 		[Authorize]
-		public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryUpdateModel model)
+		public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto model)
 		{
 			UpdateCategoryCommandRequest request = mapper.Map<UpdateCategoryCommandRequest>(model);
 			request.Id = id;
