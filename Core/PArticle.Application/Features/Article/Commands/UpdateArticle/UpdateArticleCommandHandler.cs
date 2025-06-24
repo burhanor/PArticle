@@ -2,6 +2,8 @@
 using Domain.Contracts.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Enums;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Constants;
@@ -13,7 +15,7 @@ using PArticle.Application.Models;
 
 namespace PArticle.Application.Features.Article.Commands.UpdateArticle
 {
-	public class UpdateArticleCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : BaseHandler<Domain.Entities.Article>(uow, httpContextAccessor, mapper), IRequestHandler<UpdateArticleCommandRequest, ResponseContainer<UpdateArticleCommandResponse>>
+	public class UpdateArticleCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.Article>(uow, httpContextAccessor, mapper, rabbitMqService), IRequestHandler<UpdateArticleCommandRequest, ResponseContainer<UpdateArticleCommandResponse>>
 	{
 		public async Task<ResponseContainer<UpdateArticleCommandResponse>> Handle(UpdateArticleCommandRequest request, CancellationToken cancellationToken)
 		{
@@ -68,11 +70,12 @@ namespace PArticle.Application.Features.Article.Commands.UpdateArticle
 				return response;
 			}
 
-			GetArticleQueryResponse? articleResponse = await ArticleHelper.GetArticle(article.Id, uow, httpContextAccessor, mapper, cancellationToken);
+			GetArticleQueryResponse? articleResponse = await ArticleHelper.GetArticle(article.Id, uow, httpContextAccessor, mapper,rabbitMqService, cancellationToken);
 			response.Data = mapper.Map<UpdateArticleCommandResponse>(articleResponse);
 			response.Message = Messages.Article.ARTICLE_UPDATE_SUCCESS;
 			response.Status = ResponseStatus.Success;
 
+			await RabbitMqService.Publish(Exchanges.Article, RoutingTypes.Updated, response.Data, cancellationToken);
 
 			await uow.SaveChangesAsync(cancellationToken);
 			return response;

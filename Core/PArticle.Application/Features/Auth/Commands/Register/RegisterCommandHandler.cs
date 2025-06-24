@@ -3,6 +3,7 @@ using Domain.Contracts.Enums;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Repositories;
 using PArticle.Application.Abstractions.Interfaces.Token;
 using PArticle.Application.Abstractions.Interfaces.Uow;
@@ -15,7 +16,7 @@ using PArticle.Application.Models;
 
 namespace PArticle.Application.Features.Auth.Commands.Register
 {
-	public class RegisterCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper, ITokenService tokenService) : BaseHandler<Domain.Entities.User>(uow, httpContextAccessor, mapper), IRequestHandler<RegisterCommandRequest, ResponseContainer<RegisterCommandResponse>>
+	public class RegisterCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper, ITokenService tokenService,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.User>(uow, httpContextAccessor, mapper,rabbitMqService), IRequestHandler<RegisterCommandRequest, ResponseContainer<RegisterCommandResponse>>
 	{
 		public async Task<ResponseContainer<RegisterCommandResponse>> Handle(RegisterCommandRequest request, CancellationToken cancellationToken)
 		{

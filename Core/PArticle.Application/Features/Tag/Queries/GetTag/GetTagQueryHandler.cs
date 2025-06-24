@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Features.Tag.Queries.GetTag;
@@ -14,7 +15,7 @@ namespace PArticle.Application.Features.Tag.Queries.GetTag
 {
 	
 
-	public class GetTagQueryHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : BaseHandler<Domain.Entities.Tag>(uow, httpContextAccessor, mapper), IRequestHandler<GetTagQueryRequest, GetTagQueryResponse?>
+	public class GetTagQueryHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.Tag>(uow, httpContextAccessor, mapper, rabbitMqService), IRequestHandler<GetTagQueryRequest, GetTagQueryResponse?>
 	{
 		public async Task<GetTagQueryResponse?> Handle(GetTagQueryRequest request, CancellationToken cancellationToken)
 		{

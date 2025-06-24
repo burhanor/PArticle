@@ -1,22 +1,18 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Enums;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Constants;
 using PArticle.Application.Enums;
-using PArticle.Application.Features.Category.Commands.CreateCategory;
 using PArticle.Application.Helpers;
 using PArticle.Application.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PArticle.Application.Features.Category.Commands.UpdateCategory
 {
-	public class UpdateCategoryCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : BaseHandler<Domain.Entities.Category>(uow, httpContextAccessor, mapper), IRequestHandler<UpdateCategoryCommandRequest, ResponseContainer<UpdateCategoryCommandResponse>>
+	public class UpdateCategoryCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.Category>(uow, httpContextAccessor, mapper, rabbitMqService), IRequestHandler<UpdateCategoryCommandRequest, ResponseContainer<UpdateCategoryCommandResponse>>
 	{
 		public async Task<ResponseContainer<UpdateCategoryCommandResponse>> Handle(UpdateCategoryCommandRequest request, CancellationToken cancellationToken)
 		{
@@ -43,6 +39,7 @@ namespace PArticle.Application.Features.Category.Commands.UpdateCategory
 				return response;
 			}
 			await uow.SaveChangesAsync(cancellationToken);
+			await RabbitMqService.Publish(Exchanges.Category, RoutingTypes.Updated, category, cancellationToken);
 
 			response.Data = mapper.Map<UpdateCategoryCommandResponse>(category);
 			response.Message = Messages.Category.CATEGORY_UPDATE_SUCCESS;

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Enums;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Constants;
@@ -12,7 +14,7 @@ namespace PArticle.Application.Features.Tag.Commands.CreateTag
 {
 
 
-	public class CreateTagCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : BaseHandler<Domain.Entities.Tag>(uow, httpContextAccessor, mapper), IRequestHandler<CreateTagCommandRequest, ResponseContainer<CreateTagCommandResponse>>
+	public class CreateTagCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.Tag>(uow, httpContextAccessor, mapper, rabbitMqService), IRequestHandler<CreateTagCommandRequest, ResponseContainer<CreateTagCommandResponse>>
 	{
 		public async Task<ResponseContainer<CreateTagCommandResponse>> Handle(CreateTagCommandRequest request, CancellationToken cancellationToken)
 		{
@@ -39,6 +41,7 @@ namespace PArticle.Application.Features.Tag.Commands.CreateTag
 			await uow.SaveChangesAsync(cancellationToken);
 			if (tag.Id > 0)
 			{
+				await RabbitMqService.Publish(Exchanges.Tag, RoutingTypes.Created, tag, cancellationToken);
 				response.Data = mapper.Map<CreateTagCommandResponse>(tag);
 				response.Message = Messages.Tag.TAG_CREATE_SUCCESS;
 				response.Status = ResponseStatus.Success;

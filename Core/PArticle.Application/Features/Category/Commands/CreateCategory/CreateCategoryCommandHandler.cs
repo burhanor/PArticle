@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Enums;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Constants;
@@ -10,7 +12,7 @@ using PArticle.Application.Models;
 
 namespace PArticle.Application.Features.Category.Commands.CreateCategory
 {
-	public class CreateCategoryCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : BaseHandler<Domain.Entities.Category>(uow, httpContextAccessor, mapper), IRequestHandler<CreateCategoryCommandRequest, ResponseContainer<CreateCategoryCommandResponse>>
+	public class CreateCategoryCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.Category>(uow, httpContextAccessor, mapper, rabbitMqService), IRequestHandler<CreateCategoryCommandRequest, ResponseContainer<CreateCategoryCommandResponse>>
 	{
 		public async Task<ResponseContainer<CreateCategoryCommandResponse>> Handle(CreateCategoryCommandRequest request, CancellationToken cancellationToken)
 		{
@@ -37,6 +39,7 @@ namespace PArticle.Application.Features.Category.Commands.CreateCategory
 			await uow.SaveChangesAsync(cancellationToken);
 			if (category.Id > 0)
 			{
+				await RabbitMqService.Publish(Exchanges.Category,  RoutingTypes.Created,  category, cancellationToken);
 				response.Data = mapper.Map<CreateCategoryCommandResponse>(category);
 				response.Message = Messages.Category.CATEGORY_CREATE_SUCCESS;
 				response.Status = ResponseStatus.Success;

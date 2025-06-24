@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Models.Category;
@@ -9,7 +10,7 @@ using PArticle.Domain.Views;
 
 namespace PArticle.Application.Features.Article.Queries.GetArticle
 {
-	public class GetArticleQueryHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : BaseHandler<Domain.Entities.Article>(uow,httpContextAccessor,mapper), IRequestHandler<GetArticleQueryRequest, GetArticleQueryResponse?>
+	public class GetArticleQueryHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.Article>(uow,httpContextAccessor,mapper, rabbitMqService), IRequestHandler<GetArticleQueryRequest, GetArticleQueryResponse?>
 	{
 		public async Task<GetArticleQueryResponse?> Handle(GetArticleQueryRequest request, CancellationToken cancellationToken)
 		{

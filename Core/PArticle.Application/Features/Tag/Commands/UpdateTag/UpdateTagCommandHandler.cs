@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Enums;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Constants;
@@ -12,7 +14,7 @@ namespace PArticle.Application.Features.Tag.Commands.UpdateTag
 {
 
 
-	public class UpdateTagCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : BaseHandler<Domain.Entities.Tag>(uow, httpContextAccessor, mapper), IRequestHandler<UpdateTagCommandRequest, ResponseContainer<UpdateTagCommandResponse>>
+	public class UpdateTagCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.Tag>(uow, httpContextAccessor, mapper, rabbitMqService), IRequestHandler<UpdateTagCommandRequest, ResponseContainer<UpdateTagCommandResponse>>
 	{
 		public async Task<ResponseContainer<UpdateTagCommandResponse>> Handle(UpdateTagCommandRequest request, CancellationToken cancellationToken)
 		{
@@ -40,6 +42,7 @@ namespace PArticle.Application.Features.Tag.Commands.UpdateTag
 			}
 			await uow.SaveChangesAsync(cancellationToken);
 
+			await RabbitMqService.Publish(Exchanges.Tag, RoutingTypes.Updated, tag, cancellationToken);
 			response.Data = mapper.Map<UpdateTagCommandResponse>(tag);
 			response.Message = Messages.Tag.TAG_UPDATE_SUCCESS;
 			response.Status = ResponseStatus.Success;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Constants;
@@ -11,7 +12,7 @@ namespace PArticle.Application.Features.Auth.Commands.Logout
 {
 
 
-	public class LogoutCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : BaseHandler<Domain.Entities.UserLogin>(uow, httpContextAccessor, mapper), IRequestHandler<LogoutCommandRequest, ResponseContainer<Unit>>
+	public class LogoutCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.UserLogin>(uow, httpContextAccessor, mapper,rabbitMqService), IRequestHandler<LogoutCommandRequest, ResponseContainer<Unit>>
 	{
 		public async Task<ResponseContainer<Unit>> Handle(LogoutCommandRequest request, CancellationToken cancellationToken)
 		{

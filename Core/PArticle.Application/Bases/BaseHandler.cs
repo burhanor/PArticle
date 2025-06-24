@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts.Interfaces;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Repositories;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Extentions;
@@ -17,7 +18,8 @@ namespace PArticle.Application.Bases
 		public readonly IReadRepository<T> readRepository;
 		public readonly IWriteRepository<T> writeRepository;
 		public readonly string languageCode = "tr";
-		public BaseHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : base()
+		public readonly IRabbitMqService RabbitMqService;
+		public BaseHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : base()
 		{
 			this.uow = uow;
 			this.httpContextAccessor = httpContextAccessor;
@@ -26,6 +28,7 @@ namespace PArticle.Application.Bases
 			ipAddress = httpContextAccessor.GetIpAddress();
 			readRepository = uow.GetReadRepository<T>();
 			writeRepository = uow.GetWriteRepository<T>();
+			RabbitMqService = rabbitMqService;
 		}
 	}
 

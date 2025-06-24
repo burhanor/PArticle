@@ -2,6 +2,8 @@
 using Domain.Contracts.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Enums;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Enums;
 using PArticle.Application.Interfaces;
@@ -9,7 +11,7 @@ using PArticle.Application.Models;
 
 namespace PArticle.Application.Bases
 {
-	public class DeleteHandler<T, TRequest>(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper, string successMessage,string failMessage) : BaseHandler<T>(uow, httpContextAccessor, mapper), IRequestHandler<TRequest, ResponseContainer<Unit>>
+	public class DeleteHandler<T, TRequest>(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper, string successMessage,string failMessage,IRabbitMqService rabbitMqService, Exchanges exchanges) : BaseHandler<T>(uow, httpContextAccessor, mapper, rabbitMqService), IRequestHandler<TRequest, ResponseContainer<Unit>>
 		where T : class, IEntityBase, new()
 		where TRequest : class, IDeleteRequest, new()
 	{
@@ -24,6 +26,7 @@ namespace PArticle.Application.Bases
 					await uow.SaveChangesAsync(cancellationToken);
 					response.Status = ResponseStatus.Success;
 					response.Message = successMessage;
+					await RabbitMqService.Publish(exchanges, RoutingTypes.Deleted, request.Ids, cancellationToken);
 				}
 
 			}

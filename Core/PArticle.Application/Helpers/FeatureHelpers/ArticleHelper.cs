@@ -2,6 +2,7 @@
 using Domain.Contracts.Enums;
 using Domain.Contracts.Interfaces;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Extentions;
 using PArticle.Application.Features.Article.Queries.GetArticle;
@@ -55,10 +56,10 @@ namespace PArticle.Application.Helpers.FeatureHelpers
 		}
 
 
-		public static async Task<GetArticleQueryResponse?> GetArticle(int articleId,IUow uow,IHttpContextAccessor httpContextAccessor,IMapper mapper,CancellationToken cancellationToken)
+		public static async Task<GetArticleQueryResponse?> GetArticle(int articleId,IUow uow,IHttpContextAccessor httpContextAccessor,IMapper mapper,IRabbitMqService rabbitMqService,CancellationToken cancellationToken)
 		{
 			GetArticleQueryRequest getArticleQueryRequest = new(articleId);
-			GetArticleQueryHandler getArticleQueryHandler = new(uow, httpContextAccessor, mapper);
+			GetArticleQueryHandler getArticleQueryHandler = new(uow, httpContextAccessor, mapper,rabbitMqService);
 			return await getArticleQueryHandler.Handle(getArticleQueryRequest, cancellationToken);
 		}
 	}

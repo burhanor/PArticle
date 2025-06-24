@@ -4,8 +4,13 @@ using PArticle.Persistence;
 using PArticle.Application;
 using Scalar.AspNetCore;
 using Particle.API.Transformers;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration
+	.AddJsonFile("appsettings.deployment.json", optional: true, reloadOnChange: true);
+
+Env.Load();
 
 // Add services to the container.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

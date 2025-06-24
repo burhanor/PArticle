@@ -3,6 +3,8 @@ using Domain.Contracts.Enums;
 using Domain.Contracts.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Enums;
+using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Constants;
@@ -15,7 +17,7 @@ using PArticle.Application.Models;
 
 namespace PArticle.Application.Features.Article.Commands.CreateArticle
 {
-	public class CreateArticleCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : BaseHandler<Domain.Entities.Article>(uow, httpContextAccessor, mapper), IRequestHandler<CreateArticleCommandRequest, ResponseContainer<CreateArticleCommandResponse>>
+	public class CreateArticleCommandHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.Article>(uow, httpContextAccessor, mapper, rabbitMqService), IRequestHandler<CreateArticleCommandRequest, ResponseContainer<CreateArticleCommandResponse>>
 	{
 		public async Task<ResponseContainer<CreateArticleCommandResponse>> Handle(CreateArticleCommandRequest request, CancellationToken cancellationToken)
 		{
@@ -54,8 +56,10 @@ namespace PArticle.Application.Features.Article.Commands.CreateArticle
 			await uow.SaveChangesAsync(cancellationToken);
 			if (article.Id > 0)
 			{
-				GetArticleQueryResponse? articleResponse = await ArticleHelper.GetArticle(article.Id,uow,httpContextAccessor,mapper,cancellationToken);
+				GetArticleQueryResponse? articleResponse = await ArticleHelper.GetArticle(article.Id,uow,httpContextAccessor,mapper, rabbitMqService, cancellationToken);
+
 				response.Data = mapper.Map<CreateArticleCommandResponse>(articleResponse);
+				await RabbitMqService.Publish(Exchanges.Article, RoutingTypes.Created, response.Data, cancellationToken);
 				response.Message = Messages.Article.ARTICLE_CREATE_SUCCESS;
 				response.Status = ResponseStatus.Success;
 			}
