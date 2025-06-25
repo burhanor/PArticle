@@ -16,7 +16,10 @@ namespace PArticle.Infrastructure.RabbitMq
 		private IChannel? _channel;
 		private readonly SemaphoreSlim _lock = new(1, 1);
 		private bool _connected;
-
+		BasicProperties properties = new BasicProperties()
+		{
+			DeliveryMode = DeliveryModes.Persistent
+		};
 		public RabbitMqService(IOptions<RabbitMqModel> options)
 		{
 			_options = options.Value;
@@ -79,7 +82,17 @@ namespace PArticle.Infrastructure.RabbitMq
 				}
 
 				var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
-				await _channel.BasicPublishAsync(exchangeName, routingKey, body, cancellationToken);
+
+				
+
+				await _channel.BasicPublishAsync(
+					exchange: exchangeName,
+					routingKey: routingKey,
+					mandatory: false,
+					basicProperties:properties,
+					body: body,
+					cancellationToken: cancellationToken
+				);
 			}
 			catch (Exception ex)
 			{

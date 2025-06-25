@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PArticle.TagSubscriber": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
