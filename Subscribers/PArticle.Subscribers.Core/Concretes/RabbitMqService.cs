@@ -7,6 +7,7 @@ using PArticle.Subscribers.Core.Models;
 using System.Threading.Tasks;
 using RabbitMQ.Client.Events;
 using System.Threading.Channels;
+using System.Threading;
 
 namespace PArticle.Subscribers.Core.Concretes
 {
@@ -36,6 +37,7 @@ namespace PArticle.Subscribers.Core.Concretes
 			{
 				if (_connected)
 					return;
+				Console.WriteLine($"RabbitMq bağlanılıyor: {_options.HostName}:{_options.Port}");
 
 				var factory = new ConnectionFactory
 				{
@@ -49,6 +51,8 @@ namespace PArticle.Subscribers.Core.Concretes
 				_channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
 				_connected = true;
+				Console.WriteLine($"RabbitMq bağlanıldı: {_options.HostName}:{_options.Port}");
+
 			}
 			catch (Exception ex)
 			{
@@ -96,17 +100,19 @@ namespace PArticle.Subscribers.Core.Concretes
 			}
 		}
 
-		public async Task Subscribe(string queueName, Func<string, Task<bool>> createOrUpdateFunc, Func<string, Task<bool>> deleteFunc)
+		public async Task Subscribe(string queueName, Func<string, Task<bool>> createOrUpdateFunc, Func<string, Task<bool>> deleteFunc,CancellationToken cancellationToken)
 		{
-			// Get Message from RabbitMQ
 			if (!_connected || _channel is null)
 			{
 				await Connect(CancellationToken.None);
 			}
 			try
 			{
+
 				if (_channel is null)
 					throw new InvalidOperationException("Channel is not initialized.");
+				await _channel.QueueDeclareAsync(queueName, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: cancellationToken);
+
 				var consumer = new AsyncEventingBasicConsumer(_channel);
 				consumer.ReceivedAsync += async (model, ea) =>
 				{
@@ -142,13 +148,16 @@ namespace PArticle.Subscribers.Core.Concretes
 				};
 				await _channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);
 				Console.WriteLine($"Subscribed to queue: {queueName}");
-
+				while (!cancellationToken.IsCancellationRequested)
+				{
+					await Task.Delay(1000, cancellationToken); 
+				}
 
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine($"Subscribe error: {ex.Message}");
-				throw;
+				
 			}
 
 		}

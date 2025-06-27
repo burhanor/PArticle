@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PArticle.CategorySubscriber;
 using PArticle.Subscribers.Core.Concretes;
 using PArticle.Subscribers.Core.Interfaces;
 using PArticle.Subscribers.Core.Models;
-using PArticle.TagSubscriber;
 using Serilog;
 using Serilog.Formatting.Compact;
 using Serilog.Sinks.RabbitMQ;
@@ -23,7 +23,7 @@ if (rabbitMqModel is null)
 	Console.WriteLine("RabbitMQ ayarları bulunamadı. Lütfen appsettings.json dosyasını kontrol edin.");
 	return;
 }
-if(appConstantModel is null)
+if (appConstantModel is null)
 {
 	Console.WriteLine("AppConstants ayarları bulunamadı. Lütfen appsettings.json dosyasını kontrol edin.");
 	return;
@@ -37,7 +37,7 @@ using IHost host = Host.CreateDefaultBuilder(args)
 					services.Configure<AppConstantModel>(appConstant);
 					services.AddSingleton<IRedisService, RedisService>();
 					services.AddSingleton<IRabbitMqService, RabbitMqService>();
-					services.AddSingleton<TagService>();
+					services.AddSingleton<CategoryService>();
 				})
 				.Build();
 
@@ -60,7 +60,7 @@ var rabbitMqSinkConfig = new RabbitMQSinkConfiguration
 };
 
 
-var app = host.Services.GetRequiredService<TagService>();
+var app = host.Services.GetRequiredService<CategoryService>();
 
 await app.LogInit();
 Log.Logger = new LoggerConfiguration()

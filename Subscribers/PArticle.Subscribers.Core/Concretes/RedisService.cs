@@ -20,8 +20,25 @@ namespace PArticle.Subscribers.Core.Concretes
 				EndPoints = { $"{_options.Host}:{_options.Port}" },
 				Password = _options.Password
 			};
-			_redis = ConnectionMultiplexer.Connect(config);
-			
+
+			const int delayMilliseconds = 2000;
+			while (true)
+			{
+				try
+				{
+					Console.WriteLine($"Redis'e bağlanılıyor: {_options.Host}:{_options.Port}");
+					_redis = ConnectionMultiplexer.Connect(config);
+					break;
+				}
+				catch (Exception ex) 
+				{
+					Console.WriteLine($"Redis bağlantısı başarısız: {ex.Message}");
+					Thread.Sleep(delayMilliseconds);
+				}
+				
+			}
+			Console.WriteLine($"Redis'e bağlandı: {_options.Host}:{_options.Port}");
+
 			_db = _redis.GetDatabase();
 		}
 

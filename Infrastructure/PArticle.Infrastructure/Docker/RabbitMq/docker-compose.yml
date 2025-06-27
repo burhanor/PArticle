@@ -1,4 +1,4 @@
-﻿version: '3.9'
+﻿
 
 services:
   rabbitmq:
@@ -12,7 +12,14 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - articlenetwork
     restart: unless-stopped
 
 volumes:
   rabbitmq_data:
+  
+networks:
+  articlenetwork:
+    external: true
+    name: articlenetwork

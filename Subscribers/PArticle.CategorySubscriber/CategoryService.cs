@@ -1,13 +1,15 @@
 ﻿using Microsoft.Extensions.Options;
+using PArticle.CategorySubscriber.Model;
 using PArticle.Subscribers.Core.Interfaces;
 using PArticle.Subscribers.Core.Models;
-using PArticle.TagSubscriber.Model;
 using Serilog;
 using System.Text.Json;
 
-namespace PArticle.TagSubscriber
+namespace PArticle.CategorySubscriber
 {
-	public class TagService(IRedisService redisService, IRabbitMqService rabbitMqService, IOptions<AppConstantModel> options)
+	
+
+	public class CategoryService(IRedisService redisService, IRabbitMqService rabbitMqService, IOptions<AppConstantModel> options)
 	{
 		public AppConstantModel acm = options.Value;
 
@@ -16,15 +18,15 @@ namespace PArticle.TagSubscriber
 		{
 			try
 			{
-				Log.Information( $"{acm.AppName} başlatıldı");
-				await rabbitMqService.Subscribe(acm.QueueName, AddOrUpdateAsync, DeleteAsync,CancellationToken.None);
+				Log.Information($"{acm.AppName} başlatıldı");
+				await rabbitMqService.Subscribe(acm.QueueName, AddOrUpdateAsync, DeleteAsync, CancellationToken.None);
 			}
 			catch (Exception ex)
 			{
 				Log.Error(ex, $"{acm.AppName}: ${nameof(Run)} sırasında hata oluştu. Kuyruk: {acm.QueueName}");
 			}
 		}
-	
+
 		public async Task LogInit()
 		{
 			await rabbitMqService.Publish(acm.LogExchangeName, acm.LogRoutingKey, acm.LogQueueName, "", CancellationToken.None);
@@ -36,7 +38,7 @@ namespace PArticle.TagSubscriber
 			try
 			{
 				Log.Information($"{acm.AppName}: {nameof(AddOrUpdateAsync)} çağrıldı. Mesaj: {message}");
-				TagModel? tag = System.Text.Json.JsonSerializer.Deserialize<TagModel>(message);
+				CategoryModel? tag = System.Text.Json.JsonSerializer.Deserialize<CategoryModel>(message);
 				if (tag != null)
 				{
 					await redisService.SetStringAsync($"{acm.SlugPrefix}{tag.Slug}", tag.Id.ToString());
@@ -48,7 +50,7 @@ namespace PArticle.TagSubscriber
 			{
 				Log.Error(ex, $"{acm.AppName}: {nameof(AddOrUpdateAsync)} sırasında hata oluştu. Mesaj: {message}");
 			}
-			
+
 			return false;
 		}
 
@@ -65,7 +67,7 @@ namespace PArticle.TagSubscriber
 					return true;
 				foreach (var id in ids)
 				{
-					TagModel? tag = await redisService.GetAsync<TagModel>(acm.HashName, id.ToString());
+					CategoryModel? tag = await redisService.GetAsync<CategoryModel>(acm.HashName, id.ToString());
 					if (tag is null)
 						continue;
 					await redisService.RemoveKeyAsync($"{acm.SlugPrefix}{tag.Slug}");
@@ -80,4 +82,5 @@ namespace PArticle.TagSubscriber
 			return true;
 		}
 	}
+
 }
