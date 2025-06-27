@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using PArticle.Application.Abstractions.Interfaces.RabbitMq;
+using PArticle.Application.Abstractions.Interfaces.Redis;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Features.Tag.Queries.GetTag;
@@ -15,18 +16,21 @@ namespace PArticle.Application.Features.Tag.Queries.GetTag
 {
 	
 
-	public class GetTagQueryHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService) : BaseHandler<Domain.Entities.Tag>(uow, httpContextAccessor, mapper, rabbitMqService), IRequestHandler<GetTagQueryRequest, GetTagQueryResponse?>
+	public class GetTagQueryHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper,IRabbitMqService rabbitMqService,IRedisService redisService) : BaseHandler<Domain.Entities.Tag>(uow, httpContextAccessor, mapper, rabbitMqService), IRequestHandler<GetTagQueryRequest, GetTagQueryResponse?>
 	{
 		public async Task<GetTagQueryResponse?> Handle(GetTagQueryRequest request, CancellationToken cancellationToken)
 		{
-			GetTagQueryResponse response = new();
-			Domain.Entities.Tag? tag = await readRepository.FindAsync(request.Id, cancellationToken: cancellationToken);
-			if (tag != null)
+			GetTagQueryResponse? response =  await redisService.GetAsync<GetTagQueryResponse>("tags", request.Id.ToString());
+			if (response is null)
 			{
-				response = mapper.Map<GetTagQueryResponse>(tag);
-				return response;
+				Domain.Entities.Tag? tag = await readRepository.FindAsync(request.Id, cancellationToken: cancellationToken);
+				if (tag != null)
+				{
+					response = mapper.Map<GetTagQueryResponse>(tag);
+					return response;
+				}
 			}
-			return null;
+			return response;
 
 		}
 	}

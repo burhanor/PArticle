@@ -11,15 +11,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.6" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
+    <PackageReference Include="StackExchange.Redis" Version="2.8.41" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\PArticle.Application.Abstractions\PArticle.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\Core\PArticle.Domain\PArticle.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Redis\" />
   </ItemGroup>
 
 </Project>
