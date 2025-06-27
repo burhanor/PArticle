@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PArticle.Subscribers.Core.Interfaces
+﻿namespace PArticle.Subscribers.Core.Interfaces
 {
-	public interface IElasticSearchService
+	public interface IElasticSearchService<T> where T : class, IElasticEntity
 	{
+		Task UpsertAsync(string id, T entity);
+		Task DeleteAsync(string id);
+		Task<T?> GetByIdAsync(string id);
+
+		Task<bool> DeleteByAsyncId(int id);
+	
 	}
 }

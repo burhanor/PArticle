@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace PArticle.Subscribers.Core.Models
 {
-	internal class ElasticSearchModel
+	public class ElasticSearchModel
 	{
+		public string IndexName { get; set; }
+		public string Uri { get; set; }
 	}
 }
