@@ -1,6 +1,6 @@
 ﻿namespace Domain.Contracts.Enums
 {
-	public enum Vote
+	public enum ArticleVote
 	{
 		Like = 1,
 		Dislike = 2,

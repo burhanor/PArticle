@@ -27,6 +27,29 @@ namespace PArticle.Application.Constants
 
 			public const string ARTICLE_STATUS_INVALID = nameof(ARTICLE_STATUS_INVALID);
 		}
+
+		public static class ArticleView
+		{
+			public const string ARTICLE_VIEW_NOT_FOUND = nameof(ARTICLE_VIEW_NOT_FOUND);
+			public const string ARTICLE_VIEW_ADDED = nameof(ARTICLE_VIEW_ADDED);
+			public const string ARTICLE_VIEW_ADD_ERROR = nameof(ARTICLE_VIEW_ADD_ERROR);
+			public const string ARTICLE_VIEW_IP_ADDRESS_REQUIRED = nameof(ARTICLE_VIEW_IP_ADDRESS_REQUIRED);
+			public const string ARTICLE_VIEW_ARTICLE_ID_REQUIRED = nameof(ARTICLE_VIEW_ARTICLE_ID_REQUIRED);
+			public const string ARTICLE_VIEW_RESET_SUCCESS = nameof(ARTICLE_VIEW_RESET_SUCCESS);
+			public const string ARTICLE_VIEW_RESET_FAILED = nameof(ARTICLE_VIEW_RESET_FAILED);
+		}
+		public static class ArticleVote
+		{
+			public const string ARTICLE_VOTE_NOT_FOUND = nameof(ARTICLE_VOTE_NOT_FOUND);
+			public const string ARTICLE_VOTE_ADDED = nameof(ARTICLE_VOTE_ADDED);
+			public const string ARTICLE_VOTE_ADD_ERROR = nameof(ARTICLE_VOTE_ADD_ERROR);
+			public const string ARTICLE_VOTE_IP_ADDRESS_REQUIRED = nameof(ARTICLE_VOTE_IP_ADDRESS_REQUIRED);
+			public const string ARTICLE_VOTE_ARTICLE_ID_REQUIRED = nameof(ARTICLE_VOTE_ARTICLE_ID_REQUIRED);
+			public const string ARTICLE_VOTE_TYPE_INVALID = nameof(ARTICLE_VOTE_TYPE_INVALID);
+			public const string ARTICLE_VOTE_ALREADY_EXIST = nameof(ARTICLE_VOTE_ALREADY_EXIST);
+			public const string ARTICLE_VOTE_RESET_SUCCESS = nameof(ARTICLE_VOTE_RESET_SUCCESS);
+			public const string ARTICLE_VOTE_RESET_FAILED = nameof(ARTICLE_VOTE_RESET_FAILED);
+		}
 		public static class Auth
 		{
 

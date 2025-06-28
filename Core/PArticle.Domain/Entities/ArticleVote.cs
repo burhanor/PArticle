@@ -8,7 +8,7 @@ namespace PArticle.Domain.Entities
 		public int ArticleId { get; set; }
 		public DateTime VoteDate { get; set; }
 		public string IpAddress { get; set; }
-		public Vote Vote { get; set; }
+		public global::Domain.Contracts.Enums.ArticleVote Vote { get; set; }
 		public virtual Article Article { get; set; }
 	}
 }

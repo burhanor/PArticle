@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using PArticle.Application.Features.Article.Commands.CreateArticle;
+using PArticle.Application.Features.Article.Commands.InsertArticleView;
 using PArticle.Application.Features.Article.Commands.UpdateArticle;
+using PArticle.Application.Features.Article.Commands.UpsertArticleVote;
 using PArticle.Application.Features.Article.Queries.GetArticle;
 using PArticle.Application.Features.Article.Queries.GetArticles;
+using PArticle.Application.Features.Article.Queries.GetArticleVotes;
 using PArticle.Application.Features.Category.Queries.GetCategories;
 using PArticle.Application.Models.Article;
 using PArticle.Application.Models.Category;
@@ -33,6 +36,11 @@ namespace PArticle.Application.Mappings
 
 			CreateMap<Domain.Entities.Article, GetArticlesQueryResponse>();
 			CreateMap<ArticleFilterModel, GetArticlesQueryRequest>();
+
+			CreateMap<InsertArticleViewCommandRequest,Domain.Entities.ArticleView>();
+
+			CreateMap<VwArticleVote,GetArticleVotesQueryResponse>();
+			CreateMap<UpsertArticleVoteCommandRequest, Domain.Entities.ArticleVote>();
 		}
 	}
 }

@@ -9,6 +9,7 @@ namespace PArticle.Persistence.Configurations.ViewConfigurations
 		public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<VwArticleCategory> builder)
 		{
 			builder.HasNoKey();
+			builder.ToView("vwArticleCategories");
 		}
 	}
 }

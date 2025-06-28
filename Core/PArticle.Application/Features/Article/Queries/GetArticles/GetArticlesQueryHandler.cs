@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
-using PArticle.Application.Features.Category.Queries.GetCategories;
 using PArticle.Application.Models;
 
 namespace PArticle.Application.Features.Article.Queries.GetArticles

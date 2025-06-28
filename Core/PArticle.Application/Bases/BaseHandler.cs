@@ -30,6 +30,18 @@ namespace PArticle.Application.Bases
 			writeRepository = uow.GetWriteRepository<T>();
 			RabbitMqService = rabbitMqService;
 		}
+
+
+		public BaseHandler(IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper) : base()
+		{
+			this.uow = uow;
+			this.httpContextAccessor = httpContextAccessor;
+			this.mapper = mapper;
+			userId = httpContextAccessor.GetUserId();
+			ipAddress = httpContextAccessor.GetIpAddress();
+			readRepository = uow.GetReadRepository<T>();
+			writeRepository = uow.GetWriteRepository<T>();
+		}
 	}
 
 	public class BaseHandler

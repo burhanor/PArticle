@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace PArticle.Persistence.Configurations.ViewConfigurations
 {
-	internal class VwArticleTagConfiguration:IEntityTypeConfiguration<VwArticleTag>
+
+	internal class VwArticleVoteConfiguration : IEntityTypeConfiguration<VwArticleVote>
 	{
-		public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<VwArticleTag> builder)
+		public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<VwArticleVote> builder)
 		{
 			builder.HasNoKey();
-			builder.ToView("vwArticleTags");
+			builder.ToView("vwArticleVotes");
 		}
 	}
 }

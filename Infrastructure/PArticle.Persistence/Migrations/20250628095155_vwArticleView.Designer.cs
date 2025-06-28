@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PArticle.Persistence.Context;
 
@@ -11,9 +12,11 @@ using PArticle.Persistence.Context;
 namespace PArticle.Persistence.Migrations
 {
     [DbContext(typeof(ArticleDbContext))]
-    partial class ArticleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250628095155_vwArticleView")]
+    partial class vwArticleView
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -544,35 +547,6 @@ namespace PArticle.Persistence.Migrations
                     b.ToTable((string)null);
 
                     b.ToView("vwArticleTags", (string)null);
-                });
-
-            modelBuilder.Entity("PArticle.Domain.Views.VwArticleView", b =>
-                {
-                    b.Property<int>("ArticleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalViewCount")
-                        .HasColumnType("int");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("vwArticleViews", (string)null);
-                });
-
-            modelBuilder.Entity("PArticle.Domain.Views.VwArticleVote", b =>
-                {
-                    b.Property<int>("ArticleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalVoteCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Vote")
-                        .HasColumnType("int");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("vwArticleVotes", (string)null);
                 });
 
             modelBuilder.Entity("PArticle.Domain.Entities.Article", b =>

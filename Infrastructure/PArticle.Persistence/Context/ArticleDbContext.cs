@@ -32,6 +32,8 @@ namespace PArticle.Persistence.Context
 
 		public DbSet<VwArticleCategory> VwArticleCategories { get; set; }
 		public DbSet<VwArticleTag> VwArticleTags { get; set; }
+		public DbSet<VwArticleView> VwArticleViews { get; set; }
+		public DbSet<VwArticleVote> VwArticleVotes { get; set; }
 
 		#endregion
 
