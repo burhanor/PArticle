@@ -35,6 +35,7 @@ namespace PArticle.Application.Mappings
 			CreateMap<VwArticleCategory, CategoryDto>();
 
 			CreateMap<Domain.Entities.Article, GetArticlesQueryResponse>();
+			CreateMap<ArticleModel, GetArticlesQueryResponse>();
 			CreateMap<ArticleFilterModel, GetArticlesQueryRequest>();
 
 			CreateMap<InsertArticleViewCommandRequest,Domain.Entities.ArticleView>();

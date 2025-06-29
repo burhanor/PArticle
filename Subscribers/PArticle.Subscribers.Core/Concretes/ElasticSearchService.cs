@@ -1,4 +1,5 @@
 ﻿using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.Nodes;
 using Elastic.Clients.Elasticsearch.QueryDsl;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
@@ -28,6 +29,7 @@ namespace PArticle.Subscribers.Core.Concretes
 				_client.Indices.Create(_indexName); 
 			}
 		}
+
 		public async Task UpsertAsync(string id, T entity)
 		{
 			var request = new UpdateRequest<T, T>(_indexName, id)

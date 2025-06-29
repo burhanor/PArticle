@@ -2,9 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using PArticle.Application.Abstractions.Interfaces.ElasticSearch;
 using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Redis;
 using PArticle.Application.Abstractions.Interfaces.Token;
+using PArticle.Infrastructure.ElasticSearch;
 using PArticle.Infrastructure.RabbitMq;
 using PArticle.Infrastructure.Redis;
 using PArticle.Infrastructure.Token;
@@ -58,6 +60,8 @@ namespace PArticle.Infrastructure
 			services.Configure<RedisModel>(configuration.GetSection("Redis"));
 			services.AddSingleton<IRedisService, RedisService>();
 
+			services.Configure<ElasticSearchModel>(configuration.GetSection("ElasticSearch"));
+			services.AddSingleton(typeof(IElasticSearchService<>),typeof(ElasticSearchService<>));
 		}
 
 	}
