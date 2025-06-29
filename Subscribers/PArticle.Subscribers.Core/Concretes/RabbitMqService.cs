@@ -126,7 +126,7 @@ namespace PArticle.Subscribers.Core.Concretes
 						"Created" => createOrUpdateFunc,
 						"Updated" => createOrUpdateFunc,
 						"Deleted" => deleteFunc,
-						_ => null
+						_ => createOrUpdateFunc
 					};
 					if (selectedFunc is null)
 						return;

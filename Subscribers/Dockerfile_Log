@@ -1,0 +1,16 @@
+# Build aþamasý
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY . .
+
+RUN dotnet restore PArticle.LogSubscriber/PArticle.LogSubscriber.csproj
+RUN dotnet publish PArticle.LogSubscriber/PArticle.LogSubscriber.csproj -c Release -o /app/publish
+
+# Runtime aþamasý
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR /app
+COPY --from=build /app/publish .
+
+ENTRYPOINT ["dotnet", "PArticle.LogSubscriber.dll"]
+#docker build -t particle-subscribers-log -f Dockerfile_Log .
+#docker run --name logsubscriber --network articlenetwork particle-subscribers-log

@@ -1,0 +1,16 @@
+# Build aþamasý
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY . .
+
+RUN dotnet restore PArticle.ArticleSubscriber/PArticle.ArticleSubscriber.csproj
+RUN dotnet publish PArticle.ArticleSubscriber/PArticle.ArticleSubscriber.csproj -c Release -o /app/publish
+
+# Runtime aþamasý
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR /app
+COPY --from=build /app/publish .
+
+ENTRYPOINT ["dotnet", "PArticle.ArticleSubscriber.dll"]
+#docker build -t particle-subscribers-article -f Dockerfile_Article .
+#docker run --name articlesubscriber --network articlenetwork particle-subscribers-article
