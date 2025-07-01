@@ -15,7 +15,6 @@ using PArticle.Application.Features.Article.Queries.GetArticle;
 using PArticle.Application.Features.Article.Queries.GetArticles;
 using PArticle.Application.Features.Article.Queries.GetArticleViewCount;
 using PArticle.Application.Features.Article.Queries.GetArticleVotes;
-using PArticle.Application.Features.Category.Queries.GetCategories;
 using PArticle.Application.Models.Article;
 
 namespace Particle.API.Controllers
