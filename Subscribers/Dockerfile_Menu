@@ -1,0 +1,16 @@
+# Build aþamasý
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY . .
+
+RUN dotnet restore PArticle.MenuItemSubscriber/PArticle.MenuItemSubscriber.csproj
+RUN dotnet publish PArticle.MenuItemSubscriber/PArticle.MenuItemSubscriber.csproj -c Release -o /app/publish
+
+# Runtime aþamasý
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR /app
+COPY --from=build /app/publish .
+
+ENTRYPOINT ["dotnet", "PArticle.MenuItemSubscriber.dll"]
+#docker build -t particle-subscribers-menu-item -f Dockerfile_Menu .
+#docker run --name menuitemsubscriber --network articlenetwork particle-subscribers-menu-item

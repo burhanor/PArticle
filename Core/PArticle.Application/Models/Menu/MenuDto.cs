@@ -1,9 +1,8 @@
 ﻿using Domain.Contracts.Enums;
-using PArticle.Domain.Concretes;
 
-namespace PArticle.Domain.Entities
+namespace PArticle.Application.Models.Menu
 {
-	public class MenuItem:EntityBase
+	public class MenuDto
 	{
 		public string Title { get; set; }
 		public string Description { get; set; }

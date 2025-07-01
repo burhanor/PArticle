@@ -108,7 +108,26 @@ namespace PArticle.Application.Constants
 			public const string TAG_STATUS_INVALID = nameof(TAG_STATUS_INVALID);
 			public const string TAG_NAME_ALREADY_EXIST = nameof(TAG_NAME_ALREADY_EXIST);
 		}
-		
+
+		public static class MenuItem
+		{
+			public const string MENU_ITEM_NOT_FOUND = nameof(MENU_ITEM_NOT_FOUND);
+			public const string MENU_ITEM_CREATE_SUCCESS = nameof(MENU_ITEM_CREATE_SUCCESS);
+			public const string MENU_ITEM_CREATE_FAILED = nameof(MENU_ITEM_CREATE_FAILED);
+			public const string MENU_ITEM_UPDATE_SUCCESS = nameof(MENU_ITEM_UPDATE_SUCCESS);
+			public const string MENU_ITEM_UPDATE_FAILED = nameof(MENU_ITEM_UPDATE_FAILED);
+			public const string MENU_ITEM_DELETE_SUCCESS = nameof(MENU_ITEM_DELETE_SUCCESS);
+			public const string MENU_ITEM_DELETE_FAILED = nameof(MENU_ITEM_DELETE_FAILED);
+			public const string MENU_ITEM_TITLE_MAX_LENGTH = nameof(MENU_ITEM_TITLE_MAX_LENGTH);
+			public const string MENU_ITEM_TITLE_REQUIRED = nameof(MENU_ITEM_TITLE_REQUIRED);
+			public const string MENU_ITEM_LINK_MAX_LENGTH = nameof(MENU_ITEM_LINK_MAX_LENGTH);
+			public const string MENU_ITEM_LINK_REQUIRED = nameof(MENU_ITEM_LINK_REQUIRED);
+			public const string MENU_ITEM_DESCRIPTION_MAX_LENGTH = nameof(MENU_ITEM_DESCRIPTION_MAX_LENGTH);
+			public const string MENU_ITEM_DESCRIPTION_REQUIRED = nameof(MENU_ITEM_DESCRIPTION_REQUIRED);
+			public const string MENU_ITEM_TYPE_INVALID = nameof(MENU_ITEM_TYPE_INVALID);
+
+		}
+
 		public static class User
 		{
 			public const string USER_NOT_FOUND = nameof(USER_NOT_FOUND);
