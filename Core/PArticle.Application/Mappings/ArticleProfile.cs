@@ -6,6 +6,8 @@ using PArticle.Application.Features.Article.Commands.UpsertArticleVote;
 using PArticle.Application.Features.Article.Queries.GetArticle;
 using PArticle.Application.Features.Article.Queries.GetArticles;
 using PArticle.Application.Features.Article.Queries.GetArticleVotes;
+using PArticle.Application.Features.Article.Queries.GetMostViewedArticles;
+using PArticle.Application.Features.Article.Queries.GetTopRatedArticles;
 using PArticle.Application.Features.Category.Queries.GetCategories;
 using PArticle.Application.Models.Article;
 using PArticle.Application.Models.Category;
@@ -42,6 +44,10 @@ namespace PArticle.Application.Mappings
 
 			CreateMap<VwArticleVote,GetArticleVotesQueryResponse>();
 			CreateMap<UpsertArticleVoteCommandRequest, Domain.Entities.ArticleVote>();
+
+
+			CreateMap<VwMostViewedArticle,GetMostViewedArticlesQueryResponse>();
+			CreateMap<VwTopRatedArticle, GetTopRatedArticlesQueryResponse>();
 		}
 	}
 }

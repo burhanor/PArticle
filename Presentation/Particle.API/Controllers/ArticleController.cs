@@ -15,6 +15,8 @@ using PArticle.Application.Features.Article.Queries.GetArticle;
 using PArticle.Application.Features.Article.Queries.GetArticles;
 using PArticle.Application.Features.Article.Queries.GetArticleViewCount;
 using PArticle.Application.Features.Article.Queries.GetArticleVotes;
+using PArticle.Application.Features.Article.Queries.GetMostViewedArticles;
+using PArticle.Application.Features.Article.Queries.GetTopRatedArticles;
 using PArticle.Application.Models.Article;
 
 namespace Particle.API.Controllers
@@ -121,6 +123,20 @@ namespace Particle.API.Controllers
 			return await this.DeleteAsync(mediator, request);
 		}
 		#endregion
+
+		[HttpGet("most-viewed")]
+		public async Task<IActionResult> GetMostViewedArticles(int count)
+		{
+			GetMostViewedArticlesQueryRequest request = new(count);
+			return await this.GetAsync(mediator, request);
+		}
+
+		[HttpGet("top-rated")]
+		public async Task<IActionResult> GetTopRatedArticles(int count)
+		{
+			GetTopRatedArticlesQueryRequest request = new(count);
+			return await this.GetAsync(mediator, request);
+		}
 
 	}
 }
