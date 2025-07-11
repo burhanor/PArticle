@@ -22,7 +22,15 @@ builder.Services.AddOpenApi(options =>
 }); builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
-
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowFrontend",
+		builder => builder
+			.WithOrigins("http://localhost:3000") 
+			.AllowAnyHeader()
+			.AllowAnyMethod()
+			.AllowCredentials());
+});
 
 var app = builder.Build();
 
@@ -33,6 +41,7 @@ app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseCors("AllowFrontend");
 
 app.MapControllers();
 

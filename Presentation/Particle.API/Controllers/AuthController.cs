@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Particle.API.Extensions;
 using PArticle.Application.Features.Auth.Commands.Login;
 using PArticle.Application.Features.Auth.Commands.Logout;
+using PArticle.Application.Features.Auth.Commands.RefreshToken;
 using PArticle.Application.Features.Auth.Commands.Register;
 using PArticle.Application.Models.Auth;
 
@@ -30,14 +31,25 @@ namespace Particle.API.Controllers
 		public async Task<IActionResult> Login(LoginModel model)
 		{
 			LoginCommandRequest request = new(model.Nickname, model.Password);
-			return await this.CreateAsync(mediator, request);
+			return await this.OkAsync(mediator, request);
 		}
+
+
+		[HttpPost]
+		[Route("refresh-token")]
+		public async Task<IActionResult> RefreshToken(string refreshToken)
+		{
+			RefreshTokenCommandRequest request = new(refreshToken);
+			return await this.OkAsync(mediator, request);
+		}
+
+
 		[HttpPost]
 		[Route("logout")]
 		public async Task<IActionResult> Logout()
 		{
 			LogoutCommandRequest request = new();
-			return await this.CreateAsync(mediator, request);
+			return await this.OkAsync(mediator, request);
 		}
 	}
 }

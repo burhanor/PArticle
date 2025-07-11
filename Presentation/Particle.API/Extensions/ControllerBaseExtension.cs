@@ -27,6 +27,19 @@ namespace Particle.API.Extensions
 			return controller.Created(uri, response);
 		}
 
+
+		public static async Task<IActionResult> OkAsync<TRequest>(this ControllerBase controller, IMediator mediator, TRequest request)
+		{
+			if (request == null)
+				return controller.NotFound();
+			var response = await mediator.Send(request);
+			if (response == null)
+				return controller.NotFound();
+			string uri = controller.HttpContext.Request.Path;
+			return controller.Ok(response);
+		}
+
+
 		public static async Task<IActionResult> UpdateAsync<TRequest>(this ControllerBase controller, IMediator mediator, TRequest request) where TRequest : class, IId, new()
 		{
 			return await CreateOrUpdateAsync(controller, mediator, request);
