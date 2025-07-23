@@ -14,7 +14,8 @@ namespace PArticle.Application.Features.User.Commands.UpdateUser
 				.MaximumLength(50).WithMessage(Messages.User.NICKNAME_MAX_LENGTH);
 			RuleFor(m => m.EmailAddress)
 				.NotEmpty().WithMessage(Messages.User.EMAIL_REQUIRED)
-				.MaximumLength(100).WithMessage(Messages.User.EMAIL_MAX_LENGTH);
+				.MaximumLength(100).WithMessage(Messages.User.EMAIL_MAX_LENGTH)
+				.EmailAddress().WithMessage(Messages.Auth.INVALID_EMAIL);
 			RuleFor(m => m.UserType)
 				.IsInEnum().WithMessage(Messages.User.USER_TYPE_INVALID); 
 			RuleFor(m => m.Image)

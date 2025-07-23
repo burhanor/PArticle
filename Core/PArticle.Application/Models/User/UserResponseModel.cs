@@ -13,6 +13,7 @@ namespace PArticle.Application.Models.User
 		public string Nickname { get; set; } = default!;
 		public string EmailAddress { get; set; } = default!;
 		public string? AvatarPath { get; set; }
+		public bool IsActive { get; set; }
 		public UserType UserType { get; set; }
 	}
 }

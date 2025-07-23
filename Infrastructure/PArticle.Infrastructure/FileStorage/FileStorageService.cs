@@ -20,7 +20,7 @@ namespace PArticle.Infrastructure.FileStorage
 			if (!Directory.Exists(folderPath))
 				Directory.CreateDirectory(folderPath);
 
-			var filePath = Path.Combine(folderPath, fileName);
+			var filePath = Path.Combine(folderPath, newFileName);
 			await using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
 			{
 				await content.CopyToAsync(fileStream);
