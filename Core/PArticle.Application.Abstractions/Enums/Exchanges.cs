@@ -11,6 +11,7 @@ namespace PArticle.Application.Abstractions.Enums
 		Category,
 		Article,
 		Tag,
-		MenuItem
+		MenuItem,
+		User
 	}
 }

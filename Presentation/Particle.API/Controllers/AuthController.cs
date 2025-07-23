@@ -37,9 +37,8 @@ namespace Particle.API.Controllers
 
 		[HttpPost]
 		[Route("refresh-token")]
-		public async Task<IActionResult> RefreshToken(string refreshToken)
+		public async Task<IActionResult> RefreshToken(RefreshTokenCommandRequest request)
 		{
-			RefreshTokenCommandRequest request = new(refreshToken);
 			return await this.OkAsync(mediator, request);
 		}
 

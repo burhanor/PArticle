@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using PArticle.Application.Abstractions.Interfaces.Repositories;
 using PArticle.Application.Abstractions.Interfaces.Token;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Constants;
 using PArticle.Application.Enums;
 using PArticle.Application.Models;
+using PArticle.Application.Models.Auth;
 
 namespace PArticle.Application.Features.Auth.Commands.RefreshToken
 {
-	public class RefreshTokenCommandHandler(IUow uow,IHttpContextAccessor httpContextAccessor,IMapper mapper, ITokenService tokenService) :BaseHandler<Domain.Entities.UserLogin>(uow,httpContextAccessor,mapper),IRequestHandler<RefreshTokenCommandRequest, ResponseContainer<Unit>>
+	public class RefreshTokenCommandHandler(IUow uow,IHttpContextAccessor httpContextAccessor,IMapper mapper, ITokenService tokenService) :BaseHandler<Domain.Entities.UserLogin>(uow,httpContextAccessor,mapper),IRequestHandler<RefreshTokenCommandRequest, ResponseContainer<LoginResponseModel>>
 	{
-		public async Task<ResponseContainer<Unit>> Handle(RefreshTokenCommandRequest request, CancellationToken cancellationToken)
+		public async Task<ResponseContainer<LoginResponseModel>> Handle(RefreshTokenCommandRequest request, CancellationToken cancellationToken)
 		{
-			ResponseContainer<Unit> response = new ResponseContainer<Unit>
+			ResponseContainer<LoginResponseModel> response = new ResponseContainer<LoginResponseModel>
 			{
 				Message = Messages.Auth.LOGIN_FAILED,
 				Status = ResponseStatus.Failed
@@ -29,7 +29,7 @@ namespace PArticle.Application.Features.Auth.Commands.RefreshToken
 
 			UserDto userDto = mapper.Map<UserDto>(user);
 			string accessToken = tokenService.GenerateAccessToken(userDto, [user.UserType.ToString()]);
-			string refreshToken = tokenService.GenerateRefreshToken();
+			string refreshToken = request.RefreshToken;// tokenService.GenerateRefreshToken();
 			userLogin.AccessToken = accessToken;
 			userLogin.RefreshToken = refreshToken;
 			await uow.SaveChangesAsync(cancellationToken);
@@ -40,6 +40,8 @@ namespace PArticle.Application.Features.Auth.Commands.RefreshToken
 				httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddMonths(3) });
 				httpContextAccessor.HttpContext.Response.Cookies.Append("accessToken", accessToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddDays(3) });
 			}
+
+			response.Data= new LoginResponseModel(accessToken, refreshToken);
 
 			return response;
 		}

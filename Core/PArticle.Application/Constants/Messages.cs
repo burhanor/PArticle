@@ -131,8 +131,8 @@ namespace PArticle.Application.Constants
 		public static class User
 		{
 			public const string USER_NOT_FOUND = nameof(USER_NOT_FOUND);
-			public const string USER_UPDATE_FAILED = nameof(USER_UPDATE_FAILED);
-			public const string USER_UPDATE_SUCCESS = nameof(USER_UPDATE_SUCCESS);
+			public const string UPDATE_FAILED = nameof(UPDATE_FAILED);
+			public const string UPDATE_SUCCESS = nameof(UPDATE_SUCCESS);
 			public const string PASSWORD_CHANGED = nameof(PASSWORD_CHANGED);
 			public const string INVALID_EMAIL = nameof(INVALID_EMAIL);
 			public const string EMAIL_MAX_LENGTH = nameof(EMAIL_MAX_LENGTH);
@@ -143,6 +143,15 @@ namespace PArticle.Application.Constants
 			public const string NICKNAME_ALREADY_EXIST = nameof(NICKNAME_ALREADY_EXIST);
 			public const string OLD_PASSWORD_WRONG = nameof(OLD_PASSWORD_WRONG);
 			public const string PASSWORD_UNMATCHED = nameof(PASSWORD_UNMATCHED);
+
+			public const string CREATE_SUCCESS = nameof(CREATE_SUCCESS);
+			public const string CREATE_FAILED = nameof(CREATE_FAILED);
+			public const string DELETE_SUCCESS = nameof(DELETE_SUCCESS);
+			public const string DELETE_FAILED = nameof(DELETE_FAILED);
+			public const string NICKNAME_REQUIRED = nameof(NICKNAME_REQUIRED);
+			public const string EMAIL_REQUIRED = nameof(EMAIL_REQUIRED);
+			public const string USER_TYPE_INVALID = nameof(USER_TYPE_INVALID);
+			public const string INVALID_AVATAR = nameof(INVALID_AVATAR);
 		}
 	}
 }
