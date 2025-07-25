@@ -54,7 +54,13 @@ namespace Particle.API.Controllers
 			DeleteArticleCommandRequest request = new(id);
 			return await this.DeleteAsync(mediator, request);
 		}
-
+		[HttpDelete]
+		[Authorize]
+		public async Task<IActionResult> DeleteArticles([FromBody] List<int> ids)
+		{
+			DeleteArticleCommandRequest request = new(ids);
+			return await this.DeleteAsync(mediator, request);
+		}
 		[HttpPut("{id}")]
 		[Authorize]
 		public async Task<IActionResult> UpdateArticle(int id, [FromBody] ArticleUpdateModel model)
