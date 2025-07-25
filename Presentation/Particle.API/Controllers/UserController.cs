@@ -7,6 +7,7 @@ using Particle.API.Models;
 using PArticle.Application.Features.User.Commands.CreateUser;
 using PArticle.Application.Features.User.Commands.DeleteUser;
 using PArticle.Application.Features.User.Commands.UpdateUser;
+using PArticle.Application.Features.User.Queries.GetNicknames;
 using PArticle.Application.Features.User.Queries.GetUser;
 using PArticle.Application.Features.User.Queries.GetUsers;
 using PArticle.Application.Models.User;
@@ -30,6 +31,16 @@ namespace Particle.API.Controllers
 			GetUserQueryRequest request = new(id);
 			return await this.GetByIdAsync(mediator, request);
 		}
+
+		[HttpPost("nicknames")]
+		public async Task<IActionResult> GetNicknamesByIds([FromBody] List<int> ids)
+		{
+			GetNicknamesQueryRequest request = new(ids);
+			return await this.GetAsync(mediator, request);
+		}
+
+
+
 		[HttpPost]
 		[Authorize]
 		public async Task<IActionResult> CreateUser([FromForm] AppUserModel model)
