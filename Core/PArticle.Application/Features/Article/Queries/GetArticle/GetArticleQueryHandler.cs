@@ -24,6 +24,7 @@ namespace PArticle.Application.Features.Article.Queries.GetArticle
 			response = mapper.Map<GetArticleQueryResponse>(article);
 			response.Tags= mapper.Map<List<TagDto>>(articleTags);
 			response.Categories = mapper.Map<List<CategoryDto>>(articleCategories);
+			response.Nickname = await uow.GetReadRepository<Domain.Entities.User>().GetAsync(predicate: m => m.Id == article.UserId, select: m => m.Nickname, cancellationToken: cancellationToken);
 
 			return response;
 		}

@@ -2,10 +2,13 @@
 using Domain.Contracts.Enums;
 using Domain.Contracts.Interfaces;
 using Microsoft.AspNetCore.Http;
+using PArticle.Application.Abstractions.Enums;
 using PArticle.Application.Abstractions.Interfaces.RabbitMq;
 using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Extentions;
+using PArticle.Application.Features.Article.Commands.UpdateArticle;
 using PArticle.Application.Features.Article.Queries.GetArticle;
+using System.Threading;
 
 namespace PArticle.Application.Helpers.FeatureHelpers
 {
@@ -61,6 +64,37 @@ namespace PArticle.Application.Helpers.FeatureHelpers
 			GetArticleQueryRequest getArticleQueryRequest = new(articleId);
 			GetArticleQueryHandler getArticleQueryHandler = new(uow, httpContextAccessor, mapper,rabbitMqService);
 			return await getArticleQueryHandler.Handle(getArticleQueryRequest, cancellationToken);
+		}
+
+		public static async Task UpdateArticles(IList<int> articleIds,IUow uow, IHttpContextAccessor httpContextAccessor, IMapper mapper, IRabbitMqService rabbitMqService, CancellationToken cancellationToken)
+		{
+
+			if (articleIds?.Any() == true)
+			{
+				foreach (var articleId in articleIds)
+				{
+					var articleResponse = await GetArticle(
+						articleId,
+						uow,
+						httpContextAccessor,
+						mapper,
+						rabbitMqService,
+						cancellationToken
+					);
+
+					if (articleResponse is not null)
+					{
+						var updateMessage = mapper.Map<UpdateArticleCommandResponse>(articleResponse);
+						await rabbitMqService.Publish(
+							Exchanges.Article,
+							RoutingTypes.Updated,
+							updateMessage,
+							cancellationToken
+						);
+					}
+				}
+			}
+
 		}
 	}
 }

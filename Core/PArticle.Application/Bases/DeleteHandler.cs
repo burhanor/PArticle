@@ -23,10 +23,11 @@ namespace PArticle.Application.Bases
 				if (request.Ids?.Count > 0)
 				{
 					writeRepository.Delete(request.Ids);
-					await uow.SaveChangesAsync(cancellationToken);
 					response.Status = ResponseStatus.Success;
 					response.Message = successMessage;
 					await RabbitMqService.Publish(exchanges, RoutingTypes.Deleted, request.Ids, cancellationToken);
+					await AfterDeleteSuccessAsync(request.Ids, cancellationToken);
+
 				}
 
 			}
@@ -39,7 +40,12 @@ namespace PArticle.Application.Bases
 			return response;
 		}
 
-		
+		protected virtual async Task AfterDeleteSuccessAsync(List<int> deletedIds, CancellationToken cancellationToken)
+		{
+			await uow.SaveChangesAsync(cancellationToken);
+		}
+
+
 
 
 	}

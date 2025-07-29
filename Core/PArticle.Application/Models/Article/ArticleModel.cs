@@ -15,5 +15,6 @@ namespace PArticle.Application.Models.Article
 		public Status Status { get; set; }
 		public List<CategoryDto> Categories { get; set; } = [];
 		public List<TagDto> Tags { get; set; } = [];
+		public string? Nickname { get; set; }
 	}
 }

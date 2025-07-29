@@ -43,6 +43,7 @@ namespace PArticle.ArticleSubscriber
 				ArticleModel? article = JsonSerializer.Deserialize<ArticleModel>(message);
 				if (article != null)
 				{
+					article.ElasticId=article.Id.ToString();
 					await elasticSearchService.UpsertAsync(article.ElasticId, article);
 					Log.Information($"{acm.AppName}: {nameof(ElasticSearch_AddOrUpdateAsync)} işlemi başarılı. Mesaj: {article}");
 					return true;

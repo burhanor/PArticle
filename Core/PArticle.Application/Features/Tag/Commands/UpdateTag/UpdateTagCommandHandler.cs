@@ -7,7 +7,10 @@ using PArticle.Application.Abstractions.Interfaces.Uow;
 using PArticle.Application.Bases;
 using PArticle.Application.Constants;
 using PArticle.Application.Enums;
+using PArticle.Application.Features.Article.Commands.UpdateArticle;
+using PArticle.Application.Features.Article.Queries.GetArticle;
 using PArticle.Application.Helpers;
+using PArticle.Application.Helpers.FeatureHelpers;
 using PArticle.Application.Models;
 
 namespace PArticle.Application.Features.Tag.Commands.UpdateTag
@@ -40,7 +43,21 @@ namespace PArticle.Application.Features.Tag.Commands.UpdateTag
 				response.Message = Messages.Tag.TAG_NOT_FOUND;
 				return response;
 			}
+
+			
+
 			await uow.SaveChangesAsync(cancellationToken);
+
+
+			var articleIds = await uow
+				.GetReadRepository<Domain.Entities.ArticleTag>()
+				.GetListAsync(
+				predicate: m => m.TagId == tag.Id,
+				select: m => m.ArticleId,
+				cancellationToken: cancellationToken
+				);
+			await ArticleHelper.UpdateArticles(articleIds, uow,httpContextAccessor,mapper,rabbitMqService, cancellationToken);
+
 
 			await RabbitMqService.Publish(Exchanges.Tag, RoutingTypes.Updated, tag, cancellationToken);
 			response.Data = mapper.Map<UpdateTagCommandResponse>(tag);

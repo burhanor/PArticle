@@ -30,22 +30,21 @@ namespace PArticle.Subscribers.Core.Concretes
 			}
 		}
 
+		
 		public async Task UpsertAsync(string id, T entity)
 		{
-			var request = new UpdateRequest<T, T>(_indexName, id)
+			var request = new IndexRequest<T>(entity, _indexName)
 			{
-				Doc = entity,
-				DocAsUpsert = true
+				Id = id,
 			};
 
-			var response = await _client.UpdateAsync(request);
+			var response = await _client.IndexAsync(request);
 
 			if (!response.IsValidResponse)
 			{
 				throw new Exception($"Upsert işlemi başarısız: {response.DebugInformation}");
 			}
 		}
-
 
 
 		public async Task DeleteAsync(string id)

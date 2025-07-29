@@ -8,6 +8,7 @@ using PArticle.Application.Bases;
 using PArticle.Application.Constants;
 using PArticle.Application.Enums;
 using PArticle.Application.Helpers;
+using PArticle.Application.Helpers.FeatureHelpers;
 using PArticle.Application.Models;
 
 namespace PArticle.Application.Features.Category.Commands.UpdateCategory
@@ -39,6 +40,17 @@ namespace PArticle.Application.Features.Category.Commands.UpdateCategory
 				return response;
 			}
 			await uow.SaveChangesAsync(cancellationToken);
+
+			var articleIds = await uow
+				.GetReadRepository<Domain.Entities.ArticleCategory>()
+				.GetListAsync(
+				predicate: m => m.CategoryId == category.Id,
+				select: m => m.ArticleId,
+				cancellationToken: cancellationToken
+				);
+			await ArticleHelper.UpdateArticles(articleIds, uow, httpContextAccessor, mapper, rabbitMqService, cancellationToken);
+
+
 			await RabbitMqService.Publish(Exchanges.Category, RoutingTypes.Updated, category, cancellationToken);
 
 			response.Data = mapper.Map<UpdateCategoryCommandResponse>(category);

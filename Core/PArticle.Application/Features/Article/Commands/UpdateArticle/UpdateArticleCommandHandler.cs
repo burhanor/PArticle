@@ -41,6 +41,10 @@ namespace PArticle.Application.Features.Article.Commands.UpdateArticle
 			{
 				article.PublishDate = DateTime.Now;
 			}
+			if (article.Status!=Status.Published)
+			{
+				article.PublishDate = null;
+			}
 
 			var articleCategoryWriteRepository = uow.GetWriteRepository<Domain.Entities.ArticleCategory>();
 			var articleTagWriteRepository = uow.GetWriteRepository<Domain.Entities.ArticleTag>();
@@ -69,6 +73,7 @@ namespace PArticle.Application.Features.Article.Commands.UpdateArticle
 				response.Message = Messages.Article.ARTICLE_NOT_FOUND;
 				return response;
 			}
+			await uow.SaveChangesAsync(cancellationToken);
 
 			GetArticleQueryResponse? articleResponse = await ArticleHelper.GetArticle(article.Id, uow, httpContextAccessor, mapper,rabbitMqService, cancellationToken);
 			response.Data = mapper.Map<UpdateArticleCommandResponse>(articleResponse);
@@ -77,7 +82,6 @@ namespace PArticle.Application.Features.Article.Commands.UpdateArticle
 
 			await RabbitMqService.Publish(Exchanges.Article, RoutingTypes.Updated, response.Data, cancellationToken);
 
-			await uow.SaveChangesAsync(cancellationToken);
 			return response;
 		}
 	}
