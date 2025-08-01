@@ -44,6 +44,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PArticle.LogSubscriber", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PArticle.MenuItemSubscriber", "Subscribers\PArticle.MenuItemSubscriber\PArticle.MenuItemSubscriber.csproj", "{5345C051-B4D2-4EF4-BA5C-4364C6A16967}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PArticle.Shared", "Core\PArticle.Shared\PArticle.Shared.csproj", "{15385B9E-53C8-42E2-A3C8-6A7587954B7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,10 @@ Global
 		{5345C051-B4D2-4EF4-BA5C-4364C6A16967}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5345C051-B4D2-4EF4-BA5C-4364C6A16967}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5345C051-B4D2-4EF4-BA5C-4364C6A16967}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15385B9E-53C8-42E2-A3C8-6A7587954B7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15385B9E-53C8-42E2-A3C8-6A7587954B7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15385B9E-53C8-42E2-A3C8-6A7587954B7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15385B9E-53C8-42E2-A3C8-6A7587954B7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +126,7 @@ Global
 		{DFD1F377-E627-4907-BE99-B6BE8BA31D26} = {14FA9AE6-4497-48A9-B611-62E33EB2B614}
 		{2CDFB67B-5E74-4FD0-9222-F69A674A8B28} = {14FA9AE6-4497-48A9-B611-62E33EB2B614}
 		{5345C051-B4D2-4EF4-BA5C-4364C6A16967} = {14FA9AE6-4497-48A9-B611-62E33EB2B614}
+		{15385B9E-53C8-42E2-A3C8-6A7587954B7D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4AB50E40-B752-4F0A-AE07-C98A0488560A}

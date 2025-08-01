@@ -74,5 +74,7 @@ namespace PArticle.Persistence.Repositories.Concretes
 		{
 			return await query.CountAsync();
 		}
+
+		
 	}
 }

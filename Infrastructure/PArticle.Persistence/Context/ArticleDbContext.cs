@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PArticle.Domain.Entities;
 using PArticle.Domain.Views;
-using PArticle.Persistence.Migrations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PArticle.Persistence.Context
 {
@@ -36,6 +30,20 @@ namespace PArticle.Persistence.Context
 		public DbSet<VwArticleVote> VwArticleVotes { get; set; }
 		public DbSet<VwTopRatedArticle> VwTopRatedArticles { get; set; }
 		public DbSet<VwMostViewedArticle> VwMostViewedArticles { get; set; }
+		public DbSet<VwArticleStatusCount> VwArticleStatusCounts { get; set; }
+		public DbSet<VwTagStatusCount> VwTagStatusCounts { get; set; }
+		public DbSet<VwCategoryStatusCount> VwCategoryStatusCounts { get; set; }
+		public DbSet<VwUserTypeCount> VwUserTypeCounts { get; set; }
+
+		#endregion
+
+
+		#region Stored Procedures
+		public DbSet<PArticle.Shared.Models.GetTopTag> GetTopTags { get; set; }
+		public DbSet<PArticle.Shared.Models.GetTopCategory> GetTopCategories { get; set; }
+		public DbSet<PArticle.Shared.Models.GetTopAuthor> GetTopAuthors { get; set; }
+		public DbSet<PArticle.Shared.Models.GetTopArticle> GetTopArticles { get; set; }
+		public DbSet<PArticle.Shared.Models.GetArticleRate> GetArticleRates { get; set; }
 
 		#endregion
 

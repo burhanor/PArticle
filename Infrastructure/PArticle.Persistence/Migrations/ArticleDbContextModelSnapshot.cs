@@ -528,6 +528,19 @@ namespace PArticle.Persistence.Migrations
                     b.ToView("vwArticleCategories", (string)null);
                 });
 
+            modelBuilder.Entity("PArticle.Domain.Views.VwArticleStatusCount", b =>
+                {
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vwArticleStatusCount", (string)null);
+                });
+
             modelBuilder.Entity("PArticle.Domain.Views.VwArticleTag", b =>
                 {
                     b.Property<int>("ArticleId")
@@ -578,10 +591,23 @@ namespace PArticle.Persistence.Migrations
                     b.ToView("vwArticleVotes", (string)null);
                 });
 
+            modelBuilder.Entity("PArticle.Domain.Views.VwCategoryStatusCount", b =>
+                {
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vwCategoryStatusCount", (string)null);
+                });
+
             modelBuilder.Entity("PArticle.Domain.Views.VwMostViewedArticle", b =>
                 {
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
+                    b.Property<long>("DisplayOrder")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -596,10 +622,23 @@ namespace PArticle.Persistence.Migrations
                     b.ToView("vwMostViewedArticles", (string)null);
                 });
 
+            modelBuilder.Entity("PArticle.Domain.Views.VwTagStatusCount", b =>
+                {
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vwTagStatusCount", (string)null);
+                });
+
             modelBuilder.Entity("PArticle.Domain.Views.VwTopRatedArticle", b =>
                 {
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
+                    b.Property<long>("DisplayOrder")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -612,6 +651,131 @@ namespace PArticle.Persistence.Migrations
                     b.ToTable((string)null);
 
                     b.ToView("vwTopRatedArticles", (string)null);
+                });
+
+            modelBuilder.Entity("PArticle.Domain.Views.VwUserTypeCount", b =>
+                {
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vwUserTypeCount", (string)null);
+                });
+
+            modelBuilder.Entity("PArticle.Shared.Models.GetArticleRate", b =>
+                {
+                    b.Property<string>("Nickname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("PArticle.Shared.Models.GetTopArticle", b =>
+                {
+                    b.Property<string>("Nickname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ViewCount")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("PArticle.Shared.Models.GetTopAuthor", b =>
+                {
+                    b.Property<string>("Nickname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PendingCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PublishedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RejectedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalCount")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("PArticle.Shared.Models.GetTopCategory", b =>
+                {
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("PArticle.Shared.Models.GetTopTag", b =>
+                {
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
                 });
 
             modelBuilder.Entity("PArticle.Domain.Entities.Article", b =>

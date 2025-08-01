@@ -2,8 +2,7 @@
 {
 	public enum ArticleVote
 	{
-		Like = 1,
-		Dislike = 2,
-		Neutral = 3
+		Dislike = 0,
+		Like = 100,
 	}
 }

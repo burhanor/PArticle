@@ -28,5 +28,10 @@ namespace PArticle.Persistence.Repositories.Concretes
 		{
 			return ToListAsync(Table.Where(predicate), cancellationToken);
 		}
+
+		public async  Task<IList<T>> ToListAsync(CancellationToken cancellationToken)
+		{
+			return await Table.ToListAsync(cancellationToken);
+		}
 	}
 }
