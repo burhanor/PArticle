@@ -18,6 +18,13 @@ namespace PArticle.Application.Bases
 		public async virtual Task<ResponseContainer<Unit>> Handle(TRequest request, CancellationToken cancellationToken)
 		{
 			ResponseContainer<Unit> response = new();
+			bool beforeDeleteControl = await BeforeDeleteControl(request.Ids,cancellationToken);
+			if (!beforeDeleteControl)
+			{
+				response.Status = ResponseStatus.Failed;
+				response.Message = failMessage;
+				return response;
+			}
 			try
 			{
 				if (request.Ids?.Count > 0)
@@ -45,6 +52,9 @@ namespace PArticle.Application.Bases
 			await uow.SaveChangesAsync(cancellationToken);
 		}
 
+		protected virtual async Task<bool> BeforeDeleteControl(List<int> deletedIds, CancellationToken cancellationToken) {
+			return await Task.FromResult(true);
+		}
 
 
 
