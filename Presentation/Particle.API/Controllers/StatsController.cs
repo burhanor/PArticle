@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Particle.API.Extensions;
 using PArticle.Application.Features.Stats.Queries.GetArticleOverviews;
@@ -10,12 +11,14 @@ using PArticle.Application.Features.Stats.Queries.GetTopAuthors;
 using PArticle.Application.Features.Stats.Queries.GetTopCategories;
 using PArticle.Application.Features.Stats.Queries.GetTopTags;
 using PArticle.Application.Features.Stats.Queries.GetUserOverviews;
+using PArticle.Application.Features.Stats.Queries.GetVisitors;
 using PArticle.Application.Models.Stats;
 
 namespace Particle.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize]
 	public class StatsController(IMediator mediator) : ControllerBase
 	{
 
@@ -75,6 +78,13 @@ namespace Particle.API.Controllers
 		public async Task<IActionResult> GetArticleRates([FromQuery] DateLimitModel model)
 		{
 			GetArticleRatesQueryRequest request = new(model.StartDate, model.EndDate, model.Count);
+			return await this.GetAsync(mediator, request);
+		}
+
+		[HttpGet("article-views")]
+		public async Task<IActionResult> GetArticleViews(DateTime startDate,DateTime endDate)
+		{
+			GetVisitorsQueryRequest request = new(startDate,endDate);
 			return await this.GetAsync(mediator, request);
 		}
 	}

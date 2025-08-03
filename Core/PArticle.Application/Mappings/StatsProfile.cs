@@ -8,6 +8,7 @@ using PArticle.Application.Features.Stats.Queries.GetTopAuthors;
 using PArticle.Application.Features.Stats.Queries.GetTopCategories;
 using PArticle.Application.Features.Stats.Queries.GetTopTags;
 using PArticle.Application.Features.Stats.Queries.GetUserOverviews;
+using PArticle.Application.Features.Stats.Queries.GetVisitors;
 using PArticle.Domain.Views;
 
 namespace PArticle.Application.Mappings
@@ -26,6 +27,7 @@ namespace PArticle.Application.Mappings
 			CreateMap<Shared.Models.GetTopAuthor, GetTopAuthorsQueryResponse>();
 			CreateMap<Shared.Models.GetTopArticle, GetTopArticlesQueryResponse>();
 			CreateMap<Shared.Models.GetArticleRate, GetArticleRatesQueryResponse>();
+			CreateMap<VwArticleViewDaily, GetVisitorsQueryResponse>();
 		}
 	}
 }

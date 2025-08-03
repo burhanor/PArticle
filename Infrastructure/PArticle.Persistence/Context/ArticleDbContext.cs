@@ -34,6 +34,7 @@ namespace PArticle.Persistence.Context
 		public DbSet<VwTagStatusCount> VwTagStatusCounts { get; set; }
 		public DbSet<VwCategoryStatusCount> VwCategoryStatusCounts { get; set; }
 		public DbSet<VwUserTypeCount> VwUserTypeCounts { get; set; }
+		public DbSet<VwArticleViewDaily> VwArticleViewDaily { get; set; }
 
 		#endregion
 
