@@ -12,6 +12,7 @@ using PArticle.Application.Features.Article.Commands.ResetArticleVotes;
 using PArticle.Application.Features.Article.Commands.UpdateArticle;
 using PArticle.Application.Features.Article.Commands.UpsertArticleVote;
 using PArticle.Application.Features.Article.Queries.GetArticle;
+using PArticle.Application.Features.Article.Queries.GetArticleByCategory;
 using PArticle.Application.Features.Article.Queries.GetArticles;
 using PArticle.Application.Features.Article.Queries.GetArticleViewCount;
 using PArticle.Application.Features.Article.Queries.GetArticleVotes;
@@ -31,6 +32,19 @@ namespace Particle.API.Controllers
 			GetArticlesQueryRequest request = mapper.Map<GetArticlesQueryRequest>(model);
 			return await this.GetAsync(mediator, request);
 		}
+
+		[HttpGet("by-category")]
+		public async Task<IActionResult> GetAllArticlesByCategory([FromQuery] ArticleFilterModel model)
+		{
+			GetArticleByCategoryQueryRequest request = new GetArticleByCategoryQueryRequest
+			{
+				CategorySlug = model.SearchKey,
+				PageNumber = model.PageNumber,
+				PageSize = model.PageSize,
+			};
+			return await this.GetAsync(mediator, request);
+		}
+
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetArticleById(int id)

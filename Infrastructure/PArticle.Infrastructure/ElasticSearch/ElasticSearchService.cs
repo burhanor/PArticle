@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace PArticle.Infrastructure.ElasticSearch
 {
@@ -35,7 +36,7 @@ namespace PArticle.Infrastructure.ElasticSearch
 		public async Task<(List<T> Results, int TotalCount)> SearchAsync(string? keyword, int? page = null, int? pageSize = null)
 		{
 			int from = 0;
-			int size = 10000; // Elasticsearch varsayılan üst limit (scroll yapılmadıkça)
+			int size = 10000; 
 
 			if (page.HasValue && pageSize.HasValue)
 			{
@@ -67,6 +68,45 @@ namespace PArticle.Infrastructure.ElasticSearch
 			}
 
 			return (response.Documents.ToList(), (int)response.Total);
+		}
+
+		public async Task<(List<T> Results, int TotalCount)> SearchByCategoryAsync(string? slug, int? page = null, int? pageSize = null)
+		{
+
+			int from = 0;
+			int size = 10000;
+
+			if (page.HasValue && pageSize.HasValue)
+			{
+				from = (page.Value - 1) * pageSize.Value;
+				size = pageSize.Value;
+			}
+
+			var response = await _client.SearchAsync<T>(s =>
+			{
+				s = s.Indices(_indexName).From(from).Size(size);
+				if (!string.IsNullOrWhiteSpace(slug))
+				{
+					s = s.Query(q => q
+								.Bool(b => b
+									.Must(m => m
+										.Term(t => t
+											.Field("categories.slug.keyword") // DİKKAT: .keyword alanı
+											.Value(slug)
+										)
+									)
+								)
+							);
+				}
+			});
+
+			if (!response.IsValidResponse)
+			{
+				throw new Exception($"Elasticsearch search error: {response.DebugInformation}");
+			}
+
+			return (response.Documents.ToList(), (int)response.Total);
+
 		}
 	}
 }
