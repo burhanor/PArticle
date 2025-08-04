@@ -132,12 +132,9 @@ namespace PArticle.Infrastructure.ElasticSearch
 				{
 					s = s.Query(q => q
 								.Bool(b => b
-									.Must(m => m
-										.Term(t => t
-											.Field("categories.slug.keyword") 
-											.Value(slug)
-										)
-									).Filter(f => f.Term(t => t.Field("status.keyword").Value("published")))
+									.Must(m => m.Term(t => t.Field("status.keyword").Value("Published")),
+									m => m.Term(t => t.Field("categories.slug.keyword").Value(slug))
+									)
 								)
 							);
 				}
