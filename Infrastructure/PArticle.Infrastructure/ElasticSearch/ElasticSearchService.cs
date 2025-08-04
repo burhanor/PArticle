@@ -33,7 +33,7 @@ namespace PArticle.Infrastructure.ElasticSearch
 		}
 		Fuzziness fuzziness = new Fuzziness("AUTO");
 
-		public async Task<(List<T> Results, int TotalCount)> SearchAsync(string? keyword, int? page = null, int? pageSize = null)
+		public async Task<(List<T> Results, int TotalCount)> SearchAsync(string status, string? keyword, int? page = null, int? pageSize = null)
 		{
 			int from = 0;
 			int size = 10000; 
@@ -57,6 +57,9 @@ namespace PArticle.Infrastructure.ElasticSearch
 								sq => sq.Match(m => m.Field("categories.name").Query(keyword).Fuzziness(fuzziness)),
 								sq => sq.Match(m => m.Field("tags.name").Query(keyword).Fuzziness(fuzziness))
 							)
+							.MinimumShouldMatch(1)
+							.Filter(f => f.Term(t => t.Field("status.keyword").Value(status.ToString())) 
+							)
 						)
 					);
 				}
@@ -69,6 +72,46 @@ namespace PArticle.Infrastructure.ElasticSearch
 
 			return (response.Documents.ToList(), (int)response.Total);
 		}
+
+		public async Task<(List<T> Results, int TotalCount)> SearchAsync(string? keyword,  int? page = null, int? pageSize = null)
+		{
+			int from = 0;
+			int size = 10000;
+
+			if (page.HasValue && pageSize.HasValue)
+			{
+				from = (page.Value - 1) * pageSize.Value;
+				size = pageSize.Value;
+			}
+
+			var response = await _client.SearchAsync<T>(s =>
+			{
+				s = s.Indices(_indexName).From(from).Size(size);
+				if (!string.IsNullOrWhiteSpace(keyword))
+				{
+					s = s.Query(q => q
+						.Bool(b => b
+							.Should(
+								sq => sq.Match(m => m.Field("title").Query(keyword).Fuzziness(fuzziness)),
+								sq => sq.Match(m => m.Field("content").Query(keyword).Fuzziness(fuzziness)),
+								sq => sq.Match(m => m.Field("categories.name").Query(keyword).Fuzziness(fuzziness)),
+								sq => sq.Match(m => m.Field("tags.name").Query(keyword).Fuzziness(fuzziness))
+							)
+							.MinimumShouldMatch(1)
+						)
+					);
+				}
+			});
+
+			if (!response.IsValidResponse)
+			{
+				throw new Exception($"Elasticsearch search error: {response.DebugInformation}");
+			}
+
+			return (response.Documents.ToList(), (int)response.Total);
+		}
+
+
 
 		public async Task<(List<T> Results, int TotalCount)> SearchByCategoryAsync(string? slug, int? page = null, int? pageSize = null)
 		{
@@ -91,10 +134,10 @@ namespace PArticle.Infrastructure.ElasticSearch
 								.Bool(b => b
 									.Must(m => m
 										.Term(t => t
-											.Field("categories.slug.keyword") // DİKKAT: .keyword alanı
+											.Field("categories.slug.keyword") 
 											.Value(slug)
 										)
-									)
+									).Filter(f => f.Term(t => t.Field("status.keyword").Value("published")))
 								)
 							);
 				}

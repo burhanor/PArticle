@@ -14,14 +14,16 @@ namespace PArticle.Application.Features.Article.Queries.GetArticles
 	{
 		public async Task<PaginationContainer<GetArticlesQueryResponse>> Handle(GetArticlesQueryRequest request, CancellationToken cancellationToken)
 		{
-			var result = await elasticSearchService.SearchAsync(request.SearchKey??string.Empty,request.PageNumber,request.PageSize);
+			var statusString = request.Status?.ToString() ?? string.Empty;
+			var result = string.IsNullOrEmpty(statusString)
+				? await elasticSearchService.SearchAsync(request.SearchKey ?? string.Empty, request.PageNumber, request.PageSize)
+				: await elasticSearchService.SearchAsync(statusString, request.SearchKey ?? string.Empty, request.PageNumber, request.PageSize);
 
 			PaginationContainer<GetArticlesQueryResponse> response = new(request.PageNumber, request.PageSize, result.TotalCount)
 			{
 				Items = mapper.Map<List<GetArticlesQueryResponse>>(result.Results)
 			};
 			return response;
-
 		}
 	}
 }
