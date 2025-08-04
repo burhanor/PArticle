@@ -11,8 +11,11 @@ using PArticle.Application.Features.Article.Commands.ResetArticleView;
 using PArticle.Application.Features.Article.Commands.ResetArticleVotes;
 using PArticle.Application.Features.Article.Commands.UpdateArticle;
 using PArticle.Application.Features.Article.Commands.UpsertArticleVote;
+using PArticle.Application.Features.Article.Queries.ArticleIsExist;
 using PArticle.Application.Features.Article.Queries.GetArticle;
 using PArticle.Application.Features.Article.Queries.GetArticleByCategory;
+using PArticle.Application.Features.Article.Queries.GetArticleDetail;
+using PArticle.Application.Features.Article.Queries.GetArticleInfo;
 using PArticle.Application.Features.Article.Queries.GetArticles;
 using PArticle.Application.Features.Article.Queries.GetArticleViewCount;
 using PArticle.Application.Features.Article.Queries.GetArticleVotes;
@@ -33,6 +36,14 @@ namespace Particle.API.Controllers
 			return await this.GetAsync(mediator, request);
 		}
 
+		[HttpGet("{slug}/exist")]
+		public async Task<IActionResult> IsExists(string slug)
+		{
+			ArticleIsExistQueryRequest request = new(slug);
+			return await this.GetAsync(mediator, request);
+		}
+
+
 		[HttpGet("by-category")]
 		public async Task<IActionResult> GetAllArticlesByCategory([FromQuery] ArticleFilterModel model)
 		{
@@ -45,6 +56,13 @@ namespace Particle.API.Controllers
 			return await this.GetAsync(mediator, request);
 		}
 
+		[HttpPost("info")]
+		public async Task<IActionResult> GetArticleInfos([FromBody] List<int> ids)
+		{
+			GetArticleInfoQueryRequest request = new GetArticleInfoQueryRequest(ids);
+			return await this.GetAsync(mediator, request);
+		}
+
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetArticleById(int id)
@@ -52,6 +70,15 @@ namespace Particle.API.Controllers
 			GetArticleQueryRequest request = new(id);
 			return await this.GetByIdAsync(mediator, request);
 		}
+
+
+		[HttpGet("{slug}/detail")]
+		public async Task<IActionResult> GetArticleById(string slug)
+		{
+			GetArticleDetailQueryRequest request = new(slug);
+			return await this.GetByIdAsync(mediator, request);
+		}
+
 
 		[HttpPost]
 		[Authorize]

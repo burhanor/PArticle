@@ -6,10 +6,10 @@ using Particle.API.Extensions;
 using PArticle.Application.Features.Category.Commands.CreateCategory;
 using PArticle.Application.Features.Category.Commands.DeleteCategory;
 using PArticle.Application.Features.Category.Commands.UpdateCategory;
+using PArticle.Application.Features.Category.Queries.CategoryIsExist;
 using PArticle.Application.Features.Category.Queries.GetCategories;
 using PArticle.Application.Features.Category.Queries.GetCategory;
 using PArticle.Application.Models.Category;
-using System.Threading.Tasks;
 
 namespace Particle.API.Controllers
 {
@@ -31,6 +31,15 @@ namespace Particle.API.Controllers
 			GetCategoryQueryRequest request = new(id);
 			return await this.GetByIdAsync(mediator, request);
 		}
+
+		[HttpGet("{slug}/exist")]
+		public async Task<IActionResult> IsExists(string slug)
+		{
+			CategoryIsExistQueryRequest request = new(slug);
+			return await this.GetAsync(mediator, request);
+		}
+
+
 		[HttpPost]
 		[Authorize]
 		public async Task<IActionResult> CreateCategory([FromBody] CategoryDto model)

@@ -5,6 +5,7 @@ using PArticle.Application.Features.Article.Commands.UpdateArticle;
 using PArticle.Application.Features.Article.Commands.UpsertArticleVote;
 using PArticle.Application.Features.Article.Queries.GetArticle;
 using PArticle.Application.Features.Article.Queries.GetArticleByCategory;
+using PArticle.Application.Features.Article.Queries.GetArticleDetail;
 using PArticle.Application.Features.Article.Queries.GetArticles;
 using PArticle.Application.Features.Article.Queries.GetArticleVotes;
 using PArticle.Application.Features.Article.Queries.GetMostViewedArticles;
@@ -51,7 +52,7 @@ namespace PArticle.Application.Mappings
 			CreateMap<VwTopRatedArticle, GetTopRatedArticlesQueryResponse>();
 
 			CreateMap<ArticleModel, GetArticleByCategoryQueryResponse>();
-
+			CreateMap<Domain.Entities.Article, GetArticleDetailQueryResponse>();
 			
 		}
 	}
