@@ -13,6 +13,7 @@ using PArticle.Application.Features.Article.Commands.UpdateArticle;
 using PArticle.Application.Features.Article.Commands.UpsertArticleVote;
 using PArticle.Application.Features.Article.Queries.ArticleIsExist;
 using PArticle.Application.Features.Article.Queries.GetArticle;
+using PArticle.Application.Features.Article.Queries.GetArticleByAuthor;
 using PArticle.Application.Features.Article.Queries.GetArticleByCategory;
 using PArticle.Application.Features.Article.Queries.GetArticleDetail;
 using PArticle.Application.Features.Article.Queries.GetArticleInfo;
@@ -50,6 +51,19 @@ namespace Particle.API.Controllers
 			GetArticleByCategoryQueryRequest request = new GetArticleByCategoryQueryRequest
 			{
 				CategorySlug = model.SearchKey,
+				PageNumber = model.PageNumber,
+				PageSize = model.PageSize,
+			};
+			return await this.GetAsync(mediator, request);
+		}
+
+
+		[HttpGet("by-author")]
+		public async Task<IActionResult> GetAllArticlesByAuthor([FromQuery] ArticleFilterModel model)
+		{
+			GetArticleByAuthorQueryRequest request = new GetArticleByAuthorQueryRequest
+			{
+				Nickname = model.SearchKey,
 				PageNumber = model.PageNumber,
 				PageSize = model.PageSize,
 			};

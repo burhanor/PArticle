@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Particle.API.Extensions;
 using Particle.API.Models;
+using PArticle.Application.Features.Category.Queries.CategoryIsExist;
 using PArticle.Application.Features.User.Commands.CreateUser;
 using PArticle.Application.Features.User.Commands.DeleteUser;
 using PArticle.Application.Features.User.Commands.UpdateUser;
@@ -11,6 +12,7 @@ using PArticle.Application.Features.User.Queries.GetAvatars;
 using PArticle.Application.Features.User.Queries.GetNicknames;
 using PArticle.Application.Features.User.Queries.GetUser;
 using PArticle.Application.Features.User.Queries.GetUsers;
+using PArticle.Application.Features.User.Queries.NicknameIsExist;
 using PArticle.Application.Models.User;
 
 namespace Particle.API.Controllers
@@ -47,7 +49,12 @@ namespace Particle.API.Controllers
 			return await this.GetAsync(mediator, request);
 		}
 
-
+		[HttpGet("{nickname}/exist")]
+		public async Task<IActionResult> IsExists(string nickname)
+		{
+			NicknameIsExistQueryRequest request = new(nickname);
+			return await this.GetAsync(mediator, request);
+		}
 
 		[HttpPost]
 		[Authorize]

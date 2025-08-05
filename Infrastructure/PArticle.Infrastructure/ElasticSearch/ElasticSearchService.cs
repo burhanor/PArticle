@@ -148,5 +148,40 @@ namespace PArticle.Infrastructure.ElasticSearch
 			return (response.Documents.ToList(), (int)response.Total);
 
 		}
+
+
+		public async Task<(List<T> Results, int TotalCount)> SearchByAuthorAsync(int authorId, int? page = null, int? pageSize = null)
+		{
+
+			int from = 0;
+			int size = 10000;
+
+			if (page.HasValue && pageSize.HasValue)
+			{
+				from = (page.Value - 1) * pageSize.Value;
+				size = pageSize.Value;
+			}
+
+			var response = await _client.SearchAsync<T>(s =>
+			{
+				s = s.Indices(_indexName).From(from).Size(size);
+				s = s.Query(q => q
+								.Bool(b => b
+									.Must(m => m.Term(t => t.Field("status.keyword").Value("Published")),
+									m => m.Term(t => t.Field("userId").Value(authorId))
+									)
+								)
+							);
+			});
+
+			if (!response.IsValidResponse)
+			{
+				throw new Exception($"Elasticsearch search error: {response.DebugInformation}");
+			}
+
+			return (response.Documents.ToList(), (int)response.Total);
+
+		}
+
 	}
 }

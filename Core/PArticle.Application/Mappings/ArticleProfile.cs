@@ -4,6 +4,7 @@ using PArticle.Application.Features.Article.Commands.InsertArticleView;
 using PArticle.Application.Features.Article.Commands.UpdateArticle;
 using PArticle.Application.Features.Article.Commands.UpsertArticleVote;
 using PArticle.Application.Features.Article.Queries.GetArticle;
+using PArticle.Application.Features.Article.Queries.GetArticleByAuthor;
 using PArticle.Application.Features.Article.Queries.GetArticleByCategory;
 using PArticle.Application.Features.Article.Queries.GetArticleDetail;
 using PArticle.Application.Features.Article.Queries.GetArticles;
@@ -52,6 +53,8 @@ namespace PArticle.Application.Mappings
 			CreateMap<VwTopRatedArticle, GetTopRatedArticlesQueryResponse>();
 
 			CreateMap<ArticleModel, GetArticleByCategoryQueryResponse>();
+			CreateMap<ArticleModel, GetArticleByAuthorQueryResponse>();
+			
 			CreateMap<Domain.Entities.Article, GetArticleDetailQueryResponse>();
 			
 		}
