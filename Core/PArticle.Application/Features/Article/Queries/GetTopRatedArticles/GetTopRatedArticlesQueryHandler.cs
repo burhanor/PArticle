@@ -19,7 +19,7 @@ namespace PArticle.Application.Features.Article.Queries.GetTopRatedArticles
 				request.Count = 5;
 			}
 			List<VwTopRatedArticle> results = uow.GetViewRepository<Domain.Views.VwTopRatedArticle>().Query()
-				.OrderByDescending(x => x.DisplayOrder)
+				
 				.Take(request.Count).ToList();
 			results ??= [];
 			IList<GetTopRatedArticlesQueryResponse> response = mapper.Map<IList<GetTopRatedArticlesQueryResponse>>(results);

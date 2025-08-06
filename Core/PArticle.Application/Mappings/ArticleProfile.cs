@@ -56,7 +56,9 @@ namespace PArticle.Application.Mappings
 			CreateMap<ArticleModel, GetArticleByAuthorQueryResponse>();
 			
 			CreateMap<Domain.Entities.Article, GetArticleDetailQueryResponse>();
-			
+
+			CreateMap<GetArticleVotesQueryResponse, UpsertArticleVoteCommandResponse>();
+
 		}
 	}
 }

@@ -17,7 +17,7 @@ namespace PArticle.Application.Features.Article.Queries.GetMostViewedArticles
 				request.Count = 5;
 			}
 			List<VwMostViewedArticle> results = uow.GetViewRepository<Domain.Views.VwMostViewedArticle>().Query()
-				.OrderByDescending(x => x.DisplayOrder)
+				.OrderBy(x => x.DisplayOrder)
 				.Take(request.Count)
 				.ToList();
 			results ??= [];
