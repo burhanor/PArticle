@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using PArticle.MenuItemSubscriber.Model;
 using PArticle.Subscribers.Core.Interfaces;
 using PArticle.Subscribers.Core.Models;
@@ -7,22 +8,17 @@ using System.Text.Json;
 
 namespace PArticle.MenuItemSubscriber
 {
-
-
-	public class MenuItemService(IRedisService redisService, IRabbitMqService rabbitMqService, IOptions<AppConstantModel> options)
+	public class MenuItemService : BackgroundService
 	{
-		public AppConstantModel acm = options.Value;
-		public async Task Run()
+		private readonly IRedisService redisService;
+		private readonly IRabbitMqService rabbitMqService;
+		private readonly AppConstantModel acm;
+
+		public MenuItemService(IRedisService redisService, IRabbitMqService rabbitMqService, IOptions<AppConstantModel> options)
 		{
-			try
-			{
-				Log.Information($"{acm.AppName} başlatıldı");
-				await rabbitMqService.Subscribe(acm.QueueName, AddOrUpdateAsync, DeleteAsync, CancellationToken.None);
-			}
-			catch (Exception ex)
-			{
-				Log.Error(ex, $"{acm.AppName}: ${nameof(Run)} sırasında hata oluştu. Kuyruk: {acm.QueueName}");
-			}
+			this.redisService = redisService;
+			this.rabbitMqService = rabbitMqService;
+			this.acm = options.Value;
 		}
 
 		public async Task LogInit()
@@ -30,6 +26,25 @@ namespace PArticle.MenuItemSubscriber
 			await rabbitMqService.Publish(acm.LogExchangeName, acm.LogRoutingKey, acm.LogQueueName, "", CancellationToken.None);
 		}
 
+		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+		{
+			try
+			{
+				Log.Information($"{acm.AppName} başlatıldı");
+				await LogInit();
+				await rabbitMqService.Subscribe(acm.QueueName, AddOrUpdateAsync, DeleteAsync, stoppingToken);
+
+				// Eğer burada sürekli dönen bir işlem varsa yazabilirsin, yoksa direkt bekletebilirsin:
+				while (!stoppingToken.IsCancellationRequested)
+				{
+					await Task.Delay(1000, stoppingToken); // servis ayakta kalsın diye
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, $"{acm.AppName}: {nameof(ExecuteAsync)} sırasında hata oluştu. Kuyruk: {acm.QueueName}");
+			}
+		}
 
 		public async Task<bool> AddOrUpdateAsync(string message)
 		{
@@ -53,20 +68,22 @@ namespace PArticle.MenuItemSubscriber
 
 		public async Task<bool> DeleteAsync(string message)
 		{
-
 			try
 			{
 				Log.Information($"{acm.AppName}: {nameof(DeleteAsync)} çağrıldı. Mesaj: {message}");
 				if (string.IsNullOrEmpty(message))
 					return true;
+
 				List<int>? ids = JsonSerializer.Deserialize<List<int>>(message);
 				if (ids is null)
 					return true;
+
 				foreach (var id in ids)
 				{
-					MenuItemModel? tag = await redisService.GetAsync<MenuItemModel>(acm.HashName, id.ToString());
-					if (tag is null)
+					MenuItemModel? item = await redisService.GetAsync<MenuItemModel>(acm.HashName, id.ToString());
+					if (item is null)
 						continue;
+
 					await redisService.DeleteAsync(acm.HashName, id);
 				}
 			}
@@ -78,5 +95,4 @@ namespace PArticle.MenuItemSubscriber
 			return true;
 		}
 	}
-
 }

@@ -1,62 +1,77 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using PArticle.LogSubscriber.Model;
 using PArticle.Subscribers.Core.Interfaces;
 using PArticle.Subscribers.Core.Models;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace PArticle.LogSubscriber
 {
-	public class LogService(IRedisService redisService, IRabbitMqService rabbitMqService, IElasticSearchService<ElasticLogModel> elasticSearchService, IOptions<AppConstantModel> options)
+	public class LogService : BackgroundService
 	{
-		public AppConstantModel acm = options.Value;
+		private readonly IRedisService _redisService;
+		private readonly IRabbitMqService _rabbitMqService;
+		private readonly IElasticSearchService<ElasticLogModel> _elasticSearchService;
+		private readonly AppConstantModel _acm;
 
-		public async Task Run()
+		public LogService(
+			IRedisService redisService,
+			IRabbitMqService rabbitMqService,
+			IElasticSearchService<ElasticLogModel> elasticSearchService,
+			IOptions<AppConstantModel> options)
+		{
+			_redisService = redisService;
+			_rabbitMqService = rabbitMqService;
+			_elasticSearchService = elasticSearchService;
+			_acm = options.Value;
+		}
+
+		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			try
 			{
-				var articleTask = LogElasticSearchSubscribe(CancellationToken.None);
+				Log.Information("{AppName} başlatıldı.", _acm.AppName);
 
-				await Task.WhenAll(articleTask);
+				await _rabbitMqService.Subscribe(
+					_acm.QueueName,
+					ElasticSearch_AddOrUpdateAsync,
+					ElasticSearch_DeleteAsync,
+					stoppingToken);
+
+				// Servisin kapanmaması için döngü
+				while (!stoppingToken.IsCancellationRequested)
+				{
+					await Task.Delay(1000, stoppingToken);
+				}
 			}
 			catch (Exception ex)
 			{
+				Log.Fatal(ex, "{AppName}: ExecuteAsync sırasında kritik hata.", _acm.AppName);
 			}
 		}
 
-	
-
-		private async Task LogElasticSearchSubscribe(CancellationToken cancellationToken)
-		{
-			await rabbitMqService.Subscribe(acm.QueueName, ElasticSearch_AddOrUpdateAsync, ElasticSearch_DeleteAsync, cancellationToken);
-		}
 		public async Task<bool> ElasticSearch_AddOrUpdateAsync(string message)
 		{
 			try
 			{
 				if (string.IsNullOrEmpty(message))
 					return true;
-				ElasticLogModel log = new(message);
-				await elasticSearchService.UpsertAsync(log.ElasticId, log);
+
+				var log = new ElasticLogModel(message);
+				await _elasticSearchService.UpsertAsync(log.ElasticId, log);
 				return true;
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"ElasticSearch_AddOrUpdateAsync error: {ex.Message}");
+				Log.Error(ex, "{AppName}: ElasticSearch_AddOrUpdateAsync sırasında hata oluştu. Mesaj: {Message}", _acm.AppName, message);
+				return false;
 			}
-
-			return false;
 		}
 
 		public async Task<bool> ElasticSearch_DeleteAsync(string message)
 		{
-
-			return true;
+			// Burada silme işlemi yoksa true dönebilir veya ihtiyaca göre implement edebilirsin.
+			return await Task.FromResult(true);
 		}
 	}
 }

@@ -18,7 +18,8 @@ namespace PArticle.Subscribers.Core.Concretes
 			var config = new ConfigurationOptions
 			{
 				EndPoints = { $"{_options.Host}:{_options.Port}" },
-				Password = _options.Password
+				Password = _options.Password,
+
 			};
 
 			const int delayMilliseconds = 2000;

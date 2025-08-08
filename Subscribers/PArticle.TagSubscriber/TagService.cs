@@ -1,42 +1,57 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using PArticle.Subscribers.Core.Interfaces;
 using PArticle.Subscribers.Core.Models;
 using PArticle.TagSubscriber.Model;
 using Serilog;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace PArticle.TagSubscriber
 {
-	public class TagService(IRedisService redisService, IRabbitMqService rabbitMqService, IOptions<AppConstantModel> options)
+	public class TagService : BackgroundService
 	{
-		public AppConstantModel acm = options.Value;
+		private readonly IRedisService redisService;
+		private readonly IRabbitMqService rabbitMqService;
+		private readonly AppConstantModel acm;
 
+		public TagService(IRedisService redisService, IRabbitMqService rabbitMqService, IOptions<AppConstantModel> options)
+		{
+			this.redisService = redisService;
+			this.rabbitMqService = rabbitMqService;
+			this.acm = options.Value;
+		}
 
-		public async Task Run()
+		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			try
 			{
-				Log.Information( $"{acm.AppName} başlatıldı");
-				await rabbitMqService.Subscribe(acm.QueueName, AddOrUpdateAsync, DeleteAsync,CancellationToken.None);
+				Log.Information("{AppName} başlatıldı", acm.AppName);
+
+				await rabbitMqService.Publish(acm.LogExchangeName, acm.LogRoutingKey, acm.LogQueueName, "", stoppingToken);
+
+				await rabbitMqService.Subscribe(acm.QueueName, AddOrUpdateAsync, DeleteAsync, stoppingToken);
+
+				// Servisin kapanmaması için sonsuz bekleme
+				while (!stoppingToken.IsCancellationRequested)
+				{
+					await Task.Delay(1000, stoppingToken);
+				}
 			}
 			catch (Exception ex)
 			{
-				Log.Error(ex, $"{acm.AppName}: ${nameof(Run)} sırasında hata oluştu. Kuyruk: {acm.QueueName}");
+				Log.Error(ex, "{AppName}: ExecuteAsync sırasında hata oluştu", acm.AppName);
 			}
 		}
-	
-		public async Task LogInit()
-		{
-			await rabbitMqService.Publish(acm.LogExchangeName, acm.LogRoutingKey, acm.LogQueueName, "", CancellationToken.None);
-		}
-
 
 		public async Task<bool> AddOrUpdateAsync(string message)
 		{
 			try
 			{
-				Log.Information($"{acm.AppName}: {nameof(AddOrUpdateAsync)} çağrıldı. Mesaj: {message}");
-				TagModel? tag = System.Text.Json.JsonSerializer.Deserialize<TagModel>(message);
+				Log.Information("{AppName}: {Method} çağrıldı. Mesaj: {Message}", acm.AppName, nameof(AddOrUpdateAsync), message);
+				TagModel? tag = JsonSerializer.Deserialize<TagModel>(message);
 				if (tag != null)
 				{
 					await redisService.SetStringAsync($"{acm.SlugPrefix}{tag.Slug}", tag.Id.ToString());
@@ -46,38 +61,39 @@ namespace PArticle.TagSubscriber
 			}
 			catch (Exception ex)
 			{
-				Log.Error(ex, $"{acm.AppName}: {nameof(AddOrUpdateAsync)} sırasında hata oluştu. Mesaj: {message}");
+				Log.Error(ex, "{AppName}: {Method} sırasında hata oluştu. Mesaj: {Message}", acm.AppName, nameof(AddOrUpdateAsync), message);
 			}
-			
 			return false;
 		}
 
 		public async Task<bool> DeleteAsync(string message)
 		{
-
 			try
 			{
-				Log.Information($"{acm.AppName}: {nameof(DeleteAsync)} çağrıldı. Mesaj: {message}");
-				if (string.IsNullOrEmpty(message))
+				Log.Information("{AppName}: {Method} çağrıldı. Mesaj: {Message}", acm.AppName, nameof(DeleteAsync), message);
+				if (string.IsNullOrWhiteSpace(message))
 					return true;
+
 				List<int>? ids = JsonSerializer.Deserialize<List<int>>(message);
-				if (ids is null)
+				if (ids == null)
 					return true;
+
 				foreach (var id in ids)
 				{
 					TagModel? tag = await redisService.GetAsync<TagModel>(acm.HashName, id.ToString());
-					if (tag is null)
+					if (tag == null)
 						continue;
+
 					await redisService.RemoveKeyAsync($"{acm.SlugPrefix}{tag.Slug}");
 					await redisService.DeleteAsync(acm.HashName, id);
 				}
+				return true;
 			}
 			catch (Exception ex)
 			{
-				Log.Error(ex, $"{acm.AppName}: {nameof(DeleteAsync)} sırasında hata oluştu. Mesaj: {message}");
+				Log.Error(ex, "{AppName}: {Method} sırasında hata oluştu. Mesaj: {Message}", acm.AppName, nameof(DeleteAsync), message);
+				return false;
 			}
-
-			return true;
 		}
 	}
 }

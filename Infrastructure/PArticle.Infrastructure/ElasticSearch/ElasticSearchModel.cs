@@ -10,5 +10,7 @@ namespace PArticle.Infrastructure.ElasticSearch
 	{
 		public string Uri { get; set; }
 		public string IndexName { get; set; }
+		public string Password { get; set; }
+		public string UserName { get; set; }
 	}
 }

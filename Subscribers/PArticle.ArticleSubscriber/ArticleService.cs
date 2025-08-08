@@ -1,39 +1,70 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using PArticle.ArticleSubscriber.Model;
 using PArticle.Subscribers.Core.Interfaces;
 using PArticle.Subscribers.Core.Models;
 using Serilog;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PArticle.ArticleSubscriber
 {
-	public class ArticleService(IRedisService redisService, IRabbitMqService rabbitMqService,IElasticSearchService<ArticleModel> elasticSearchService, IOptions<AppConstantModel> options)
+	public class ArticleService : BackgroundService
 	{
-		public AppConstantModel acm = options.Value;
-		public async Task Run()
+		private readonly IRedisService redisService;
+		private readonly IRabbitMqService rabbitMqService;
+		private readonly IElasticSearchService<ArticleModel> elasticSearchService;
+		private readonly AppConstantModel acm;
+
+		public ArticleService(
+			IRedisService redisService,
+			IRabbitMqService rabbitMqService,
+			IElasticSearchService<ArticleModel> elasticSearchService,
+			IOptions<AppConstantModel> options)
+		{
+			this.redisService = redisService;
+			this.rabbitMqService = rabbitMqService;
+			this.elasticSearchService = elasticSearchService;
+			this.acm = options.Value;
+		}
+
+		public override async Task StartAsync(CancellationToken cancellationToken)
+		{
+			Log.Information($"{acm.AppName} background servis olarak başlatıldı.");
+			await LogInit();
+			await base.StartAsync(cancellationToken);
+		}
+
+		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			try
 			{
-				Log.Information($"{acm.AppName} başlatıldı");
-				var articleTask = ArticleElasticSearchSubscribe(CancellationToken.None);
-
-				await Task.WhenAll(articleTask);
+				// Burada RabbitMQ aboneliğini başlatıyoruz ve iptal token'ı dinliyoruz.
+				await rabbitMqService.Subscribe(
+					acm.QueueName,
+					ElasticSearch_AddOrUpdateAsync,
+					ElasticSearch_DeleteAsync,
+					stoppingToken);
 			}
 			catch (Exception ex)
 			{
-				Log.Error(ex, $"{acm.AppName}: ${nameof(Run)} sırasında hata oluştu. Kuyruk: {acm.QueueName}");
+				Log.Error(ex, $"{acm.AppName}: {nameof(ExecuteAsync)} sırasında hata oluştu.");
 			}
+		}
+
+		public override async Task StopAsync(CancellationToken cancellationToken)
+		{
+			Log.Information($"{acm.AppName} background servis durduruluyor.");
+			await base.StopAsync(cancellationToken);
 		}
 
 		public async Task LogInit()
 		{
 			await rabbitMqService.Publish(acm.LogExchangeName, acm.LogRoutingKey, acm.LogQueueName, "", CancellationToken.None);
 		}
+
 		#region Article ElasticSearch islemleri
-		private async Task ArticleElasticSearchSubscribe(CancellationToken cancellationToken)
-		{
-			await rabbitMqService.Subscribe(acm.QueueName, ElasticSearch_AddOrUpdateAsync, ElasticSearch_DeleteAsync, cancellationToken);
-		}
 
 		public async Task<bool> ElasticSearch_AddOrUpdateAsync(string message)
 		{
@@ -43,7 +74,7 @@ namespace PArticle.ArticleSubscriber
 				ArticleModel? article = JsonSerializer.Deserialize<ArticleModel>(message);
 				if (article != null)
 				{
-					article.ElasticId=article.Id.ToString();
+					article.ElasticId = article.Id.ToString();
 					await elasticSearchService.UpsertAsync(article.ElasticId, article);
 					Log.Information($"{acm.AppName}: {nameof(ElasticSearch_AddOrUpdateAsync)} işlemi başarılı. Mesaj: {article}");
 					return true;
@@ -59,15 +90,16 @@ namespace PArticle.ArticleSubscriber
 
 		public async Task<bool> ElasticSearch_DeleteAsync(string message)
 		{
-
 			try
 			{
 				Log.Information($"{acm.AppName}: {nameof(ElasticSearch_DeleteAsync)} çağrıldı. Mesaj: {message}");
 				if (string.IsNullOrEmpty(message))
 					return true;
+
 				List<int>? ids = JsonSerializer.Deserialize<List<int>>(message);
 				if (ids is null)
 					return true;
+
 				foreach (var id in ids)
 				{
 					await elasticSearchService.DeleteByAsyncId(id);
@@ -83,7 +115,5 @@ namespace PArticle.ArticleSubscriber
 		}
 
 		#endregion
-
-
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.Nodes;
 using Elastic.Clients.Elasticsearch.QueryDsl;
+using Elastic.Transport;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using PArticle.Subscribers.Core.Interfaces;
@@ -19,6 +20,8 @@ namespace PArticle.Subscribers.Core.Concretes
 			_indexName = esm.IndexName.ToLower();
 
 			var settings = new ElasticsearchClientSettings(new Uri(esm.Uri))
+				.ServerCertificateValidationCallback(CertificateValidations.AllowAll)
+				.Authentication(new BasicAuthentication(esm.UserName, esm.Password))
 				.DefaultIndex(_indexName);
 
 			_client = new ElasticsearchClient(settings);

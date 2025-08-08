@@ -9,43 +9,31 @@ using Serilog;
 using Serilog.Formatting.Compact;
 using Serilog.Sinks.RabbitMQ;
 
-
 var config = new ConfigurationBuilder()
-	.SetBasePath(Directory.GetCurrentDirectory())
+	.SetBasePath(AppContext.BaseDirectory)
 	.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+	.AddUserSecrets<Program>(optional: true)
 	.Build();
 
 RabbitMqModel? rabbitMqModel = config.GetSection("RabbitMQ").Get<RabbitMqModel>();
 var appConstant = config.GetSection("AppConstants");
 AppConstantModel? appConstantModel = appConstant.Get<AppConstantModel>();
+
 if (rabbitMqModel is null)
 {
 	Console.WriteLine("RabbitMQ ayarları bulunamadı. Lütfen appsettings.json dosyasını kontrol edin.");
 	return;
 }
-if(appConstantModel is null)
+if (appConstantModel is null)
 {
 	Console.WriteLine("AppConstants ayarları bulunamadı. Lütfen appsettings.json dosyasını kontrol edin.");
 	return;
 }
 
-using IHost host = Host.CreateDefaultBuilder(args)
-				.ConfigureServices((context, services) =>
-				{
-					services.Configure<RabbitMqModel>(config.GetSection("RabbitMQ"));
-					services.Configure<RedisModel>(config.GetSection("Redis"));
-					services.Configure<AppConstantModel>(appConstant);
-					services.AddSingleton<IRedisService, RedisService>();
-					services.AddSingleton<IRabbitMqService, RabbitMqService>();
-					services.AddSingleton<TagService>();
-				})
-				.Build();
-
-
 var rabbitMqConfig = new RabbitMQClientConfiguration
 {
 	Port = rabbitMqModel.Port,
-	Hostnames = [rabbitMqModel.HostName],
+	Hostnames = new[] { rabbitMqModel.HostName },
 	AutoCreateExchange = false,
 	Username = rabbitMqModel.User,
 	Password = rabbitMqModel.Password,
@@ -54,19 +42,28 @@ var rabbitMqConfig = new RabbitMQClientConfiguration
 	ExchangeType = "direct",
 	DeliveryMode = RabbitMQDeliveryMode.Durable
 };
+
 var rabbitMqSinkConfig = new RabbitMQSinkConfiguration
 {
 	TextFormatter = new CompactJsonFormatter()
 };
 
-
-var app = host.Services.GetRequiredService<TagService>();
-
-await app.LogInit();
 Log.Logger = new LoggerConfiguration()
-			.MinimumLevel.Debug()
-			.WriteTo.RabbitMQ(rabbitMqConfig, rabbitMqSinkConfig)
-			.CreateLogger();
-await app.Run();
+	.MinimumLevel.Debug()
+	.WriteTo.RabbitMQ(rabbitMqConfig, rabbitMqSinkConfig)
+	.CreateLogger();
 
-Console.ReadLine();
+using IHost host = Host.CreateDefaultBuilder(args)
+	.UseSerilog() 
+	.ConfigureServices((context, services) =>
+	{
+		services.Configure<RabbitMqModel>(config.GetSection("RabbitMQ"));
+		services.Configure<RedisModel>(config.GetSection("Redis"));
+		services.Configure<AppConstantModel>(appConstant);
+		services.AddSingleton<IRedisService, RedisService>();
+		services.AddSingleton<IRabbitMqService, RabbitMqService>();
+		services.AddHostedService<TagService>();  
+	})
+	.Build();
+
+await host.RunAsync();

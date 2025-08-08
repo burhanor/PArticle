@@ -1,4 +1,5 @@
 ﻿using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
 using Microsoft.Extensions.Options;
 using PArticle.Application.Abstractions.Interfaces.ElasticSearch;
 using System;
@@ -21,9 +22,15 @@ namespace PArticle.Infrastructure.ElasticSearch
 			_indexName = esm.IndexName.ToLower();
 
 			var settings = new ElasticsearchClientSettings(new Uri(esm.Uri))
-				.DefaultIndex(_indexName);
+				.DefaultIndex(_indexName)
+	.ServerCertificateValidationCallback(CertificateValidations.AllowAll)
+				.Authentication(new BasicAuthentication(esm.UserName, esm.Password));
 
-			_client = new ElasticsearchClient(settings);
+
+
+
+
+				_client = new ElasticsearchClient(settings);
 
 			// İndeks varsa oluşturma
 			if (!_client.Indices.Exists(_indexName).Exists)

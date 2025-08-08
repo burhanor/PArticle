@@ -5,7 +5,12 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>c9ec9e87-7890-4d07-8c5b-e09f6416dc8e</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="9.0.8" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PArticle.Subscribers.Core\PArticle.Subscribers.Core.csproj" />
