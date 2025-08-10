@@ -51,7 +51,10 @@ namespace PArticle.Application.Features.Article.Commands.CreateArticle
 					TagId = m
 				})];
 
-			article.UserId = userId;
+
+			Domain.Entities.User? user= await uow.GetReadRepository<Domain.Entities.User>().GetAsync(m => m.IsActive, cancellationToken: cancellationToken);
+
+			article.UserId = user.Id;
 			await writeRepository.AddAsync(article, cancellationToken);
 			await uow.SaveChangesAsync(cancellationToken);
 			if (article.Id > 0)

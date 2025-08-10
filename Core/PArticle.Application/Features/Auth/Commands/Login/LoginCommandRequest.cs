@@ -14,13 +14,15 @@ namespace PArticle.Application.Features.Auth.Commands.Login
 		{
 
 		}
-		public LoginCommandRequest(string emailOrNickname, string password) 
+		public LoginCommandRequest(string emailOrNickname, string password,string cookieDomain) 
 		{
 			EmailOrNickname = emailOrNickname;
 			Password = password;
+			CookieDomain = cookieDomain;
 		}
 
 		public string EmailOrNickname { get; set; }
 		public string Password { get; set; }
+		public string CookieDomain { get; set; }
 	}
 }

@@ -6,5 +6,6 @@ namespace PArticle.Application.Features.Auth.Commands.Register
 {
 	public class RegisterCommandRequest:RegisterModel,IRequest<ResponseContainer<RegisterCommandResponse>>
 	{
+		public string CookieDomain { get; set; }
 	}
 }

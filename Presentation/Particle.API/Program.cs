@@ -12,6 +12,9 @@ builder.Configuration
 
 Env.Load();
 
+string[] allowedOrigins = builder.Configuration
+	.GetSection("AllowedOrigins")
+	.Get<string[]>()!;
 // Add services to the container.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddControllers();
@@ -26,7 +29,7 @@ builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowFrontend",
 		builder => builder
-			.WithOrigins("http://localhost:3000") 
+			.WithOrigins(allowedOrigins) 
 			.AllowAnyHeader()
 			.AllowAnyMethod()
 			.AllowCredentials());
@@ -34,15 +37,14 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.UseStaticFiles();
-// Configure the HTTP request pipeline.
+app.UseStaticFiles();// Configure the HTTP request pipeline.
+app.UseRouting();
 app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 app.UseCors("AllowFrontend");
+app.UseAuthorization();
 
 app.MapControllers();
 

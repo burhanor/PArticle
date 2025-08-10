@@ -54,8 +54,8 @@ namespace PArticle.Application.Features.Auth.Commands.Login
 
 			if (httpContextAccessor.HttpContext != null)
 			{
-				httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddMonths(3) });
-				httpContextAccessor.HttpContext.Response.Cookies.Append("accessToken", accessToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddDays(3) });
+				httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions {Domain= request.CookieDomain, HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddMonths(3) });
+				httpContextAccessor.HttpContext.Response.Cookies.Append("accessToken", accessToken, new CookieOptions { Domain = request.CookieDomain, HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddDays(3) });
 			}
 
 			return response;

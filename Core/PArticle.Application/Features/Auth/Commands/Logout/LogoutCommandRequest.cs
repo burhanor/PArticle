@@ -5,5 +5,6 @@ namespace PArticle.Application.Features.Auth.Commands.Logout
 {
 	public class LogoutCommandRequest : IRequest<ResponseContainer<Unit>>
 	{
+		public string CookieDomain { get; set; }
 	}
 }

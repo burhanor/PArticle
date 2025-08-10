@@ -28,8 +28,8 @@ namespace PArticle.Application.Features.Auth.Commands.Logout
 			writeRepository.Delete(m => m.RefreshToken == refreshToken);
 			await uow.SaveChangesAsync(cancellationToken);
 
-			httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddDays(-1) });
-			httpContextAccessor.HttpContext.Response.Cookies.Append("accessToken", "", new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddDays(-1) });
+			httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", "", new CookieOptions {Domain=request.CookieDomain, HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddDays(-1) });
+			httpContextAccessor.HttpContext.Response.Cookies.Append("accessToken", "", new CookieOptions { Domain = request.CookieDomain, HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = DateTime.UtcNow.AddDays(-1) });
 
 			response.Status = ResponseStatus.Success;
 			response.Message = Messages.Auth.LOGOUT_SUCCESS;

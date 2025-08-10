@@ -54,6 +54,7 @@ Log.Logger = new LoggerConfiguration()
 	.CreateLogger();
 
 using IHost host = Host.CreateDefaultBuilder(args)
+	.UseWindowsService()
 	.UseSerilog() 
 	.ConfigureServices((context, services) =>
 	{

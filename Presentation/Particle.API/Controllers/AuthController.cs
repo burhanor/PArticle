@@ -14,14 +14,17 @@ namespace Particle.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class AuthController(IMediator mediator, IMapper mapper) : ControllerBase
+	public class AuthController(IMediator mediator, IMapper mapper,IConfiguration configuration) : ControllerBase
 	{
+
+		string cookieDomain = configuration["Cookie_Domain"]!;
 
 		[HttpPost]
 		[Route("register")]
 		public async Task<IActionResult> Register(RegisterModel model)
 		{
 			RegisterCommandRequest request = mapper.Map<RegisterCommandRequest>(model);
+			request.CookieDomain = cookieDomain;
 			return await this.CreateAsync(mediator, request);
 		}
 
@@ -30,7 +33,8 @@ namespace Particle.API.Controllers
 		[Route("login")]
 		public async Task<IActionResult> Login(LoginModel model)
 		{
-			LoginCommandRequest request = new(model.Nickname, model.Password);
+
+			LoginCommandRequest request = new(model.Nickname, model.Password,cookieDomain);
 			return await this.OkAsync(mediator, request);
 		}
 
@@ -39,6 +43,7 @@ namespace Particle.API.Controllers
 		[Route("refresh-token")]
 		public async Task<IActionResult> RefreshToken(RefreshTokenCommandRequest request)
 		{
+			request.CookieDomain = cookieDomain;
 			return await this.OkAsync(mediator, request);
 		}
 
@@ -48,6 +53,7 @@ namespace Particle.API.Controllers
 		public async Task<IActionResult> Logout()
 		{
 			LogoutCommandRequest request = new();
+			request.CookieDomain = cookieDomain;
 			return await this.OkAsync(mediator, request);
 		}
 	}
